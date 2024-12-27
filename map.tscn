@@ -1,0 +1,38 @@
+[gd_scene load_steps=8 format=3 uid="uid://ck2clqihnoa7h"]
+
+[ext_resource type="PackedScene" uid="uid://5q2puw6ju4rm" path="res://water_plane.tscn" id="1_emv6m"]
+[ext_resource type="Script" path="res://cube.gd" id="2_ewsk1"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_1jptm"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_au1pg"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ypqti"]
+sky_top_color = Color(0.463134, 0.854076, 0.962944, 1)
+
+[sub_resource type="Sky" id="Sky_eoots"]
+sky_material = SubResource("ProceduralSkyMaterial_ypqti")
+
+[sub_resource type="Environment" id="Environment_vrchl"]
+background_mode = 2
+sky = SubResource("Sky_eoots")
+
+[node name="Map" type="Node3D"]
+
+[node name="WaterPlane" parent="." instance=ExtResource("1_emv6m")]
+surface_material_override/0 = null
+
+[node name="Cube" type="RigidBody3D" parent="."]
+script = ExtResource("2_ewsk1")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Cube"]
+mesh = SubResource("BoxMesh_1jptm")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cube"]
+shape = SubResource("BoxShape3D_au1pg")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.889998, -0.268003, 0.368888, 0, 0.809027, 0.587771, -0.455964, -0.523115, 0.720033, 1.78826, 1.99911, 2.68601)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_vrchl")
