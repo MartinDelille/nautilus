@@ -1,0 +1,26 @@
+[gd_scene load_steps=5 format=3 uid="uid://5q2puw6ju4rm"]
+
+[ext_resource type="Shader" path="res://Water.gdshader" id="1_eglkr"]
+[ext_resource type="Texture2D" uid="uid://dd3w5t3unfab5" path="res://water_noise_texture_2d.tres" id="2_2hg1f"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_xrj4y"]
+size = Vector2(200, 200)
+subdivide_width = 200
+subdivide_depth = 200
+orientation = 1
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_360tl"]
+render_priority = 0
+shader = ExtResource("1_eglkr")
+shader_parameter/albedo = Color(0, 0.321569, 0.431373, 1)
+shader_parameter/metallic = 0.0
+shader_parameter/roughness = 0.02
+shader_parameter/wave_direction = Vector2(2, 0)
+shader_parameter/wave_direction2 = Vector2(0, 1)
+shader_parameter/time_scale = 0.025
+shader_parameter/texture_normal = ExtResource("2_2hg1f")
+shader_parameter/texture_normal2 = ExtResource("2_2hg1f")
+
+[node name="WaterPlane" type="MeshInstance3D"]
+mesh = SubResource("QuadMesh_xrj4y")
+surface_material_override/0 = SubResource("ShaderMaterial_360tl")
