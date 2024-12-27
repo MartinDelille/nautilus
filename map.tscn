@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://ck2clqihnoa7h"]
+[gd_scene load_steps=8 format=3 uid="uid://ck2clqihnoa7h"]
 
 [ext_resource type="PackedScene" uid="uid://5q2puw6ju4rm" path="res://water_plane.tscn" id="1_emv6m"]
+[ext_resource type="Script" path="res://cube.gd" id="2_6pdkk"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ypqti"]
 sky_top_color = Color(0.463134, 0.854076, 0.962944, 1)
@@ -12,6 +13,10 @@ sky_material = SubResource("ProceduralSkyMaterial_ypqti")
 background_mode = 2
 sky = SubResource("Sky_eoots")
 
+[sub_resource type="BoxMesh" id="BoxMesh_5thri"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_qn3cs"]
+
 [node name="Map" type="Node3D"]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
@@ -20,7 +25,16 @@ environment = SubResource("Environment_vrchl")
 [node name="WaterPlane" parent="." instance=ExtResource("1_emv6m")]
 
 [node name="CameraPivot" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.778758, 0.627324, 0, -0.627324, 0.778758, 0, 0, 0)
+transform = Transform3D(0.892273, -0.250329, 0.375747, 0.0323924, 0.865571, 0.499737, -0.450334, -0.43373, 0.780434, 0, 0, 0)
 
 [node name="Camera3D" type="Camera3D" parent="CameraPivot"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 19)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.45)
+
+[node name="Cube" type="RigidBody3D" parent="."]
+script = ExtResource("2_6pdkk")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Cube"]
+mesh = SubResource("BoxMesh_5thri")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cube"]
+shape = SubResource("BoxShape3D_qn3cs")
