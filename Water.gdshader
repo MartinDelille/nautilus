@@ -16,6 +16,11 @@ uniform vec4 color_deep : source_color;
 uniform vec4 color_shallow : source_color;
 uniform float beers_law = 2.0;
 uniform float depth_offset = -0.75;
+uniform float wave_time = 0.0;
+uniform float wave_amplitude : hint_range(0.0, 1.0) = 0.2;
+uniform float wave_frequency : hint_range(0.0, 10.0) = 1.0;
+uniform float wave_speed : hint_range(0.0, 10.0) = 1.0;
+uniform float wave_angle = 0.0;
 
 uniform sampler2D DEPTH_TEXTURE : hint_depth_texture, filter_linear_mipmap;
 uniform sampler2D SCREEN_TEXTURE : hint_screen_texture, filter_linear_mipmap;
@@ -30,7 +35,20 @@ float fresnel(float amount, vec3 normal, vec3 view) {
 void vertex() {
 	world_pos =  (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 	height = texture(wave, world_pos.xz / noise_scale + TIME * time_scale).r;
-	VERTEX.y = height * height_scale;
+	height = 4. * cos(TIME*1. + world_pos.x);
+	VERTEX.y += height * height_scale;
+
+	vec2 wave_direction3 = vec2(cos(wave_angle), sin(wave_angle));
+	vec2 pos = VERTEX.xz * wave_direction3;
+	VERTEX.y = sin(dot(pos, wave_direction3) * wave_frequency + wave_time * wave_speed) * wave_amplitude;
+
+	// Compute partial derivatives
+	float dx = wave_amplitude * wave_frequency * cos(dot(pos, wave_direction) * wave_frequency + wave_time * wave_speed) * wave_direction.x;
+	float dz = wave_amplitude * wave_frequency * cos(dot(pos, wave_direction) * wave_frequency + wave_time * wave_speed) * wave_direction.y;
+
+	// Compute the normal
+	vec3 normal = normalize(vec3(-dx, 1.0, -dz));
+	NORMAL = normal;
 }
 
 void fragment() {
