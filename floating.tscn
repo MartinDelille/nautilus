@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://j2ahw1ou4mj7"]
+
+[ext_resource type="Script" path="res://floating.gd" id="1_smv28"]
+
+[node name="Floating" type="RigidBody3D"]
+script = ExtResource("1_smv28")

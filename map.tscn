@@ -1,7 +1,8 @@
 [gd_scene load_steps=8 format=3 uid="uid://ck2clqihnoa7h"]
 
 [ext_resource type="PackedScene" uid="uid://5q2puw6ju4rm" path="res://water_plane.tscn" id="1_emv6m"]
-[ext_resource type="Script" path="res://cube.gd" id="2_6pdkk"]
+[ext_resource type="PackedScene" uid="uid://j2ahw1ou4mj7" path="res://floating.tscn" id="4_wisn2"]
+[ext_resource type="PackedScene" uid="uid://df7tqccjhofm7" path="res://boat.blend" id="5_5xxyr"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ypqti"]
 sky_top_color = Color(0.463134, 0.854076, 0.962944, 1)
@@ -13,10 +14,8 @@ sky_material = SubResource("ProceduralSkyMaterial_ypqti")
 background_mode = 2
 sky = SubResource("Sky_eoots")
 
-[sub_resource type="BoxMesh" id="BoxMesh_5thri"]
-size = Vector3(1, 0.2, 2)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_qn3cs"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_xm1ix"]
+size = Vector3(2, 1, 4)
 
 [node name="Map" type="Node3D"]
 
@@ -29,42 +28,11 @@ environment = SubResource("Environment_vrchl")
 transform = Transform3D(0.892273, -0.250329, 0.375747, 0.0323924, 0.865571, 0.499737, -0.450334, -0.43373, 0.780434, 0, 0, 0)
 
 [node name="Camera3D" type="Camera3D" parent="CameraPivot"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.45)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 11.71)
 
-[node name="Cube" type="RigidBody3D" parent="."]
-script = ExtResource("2_6pdkk")
+[node name="FloatingBoat" parent="." instance=ExtResource("4_wisn2")]
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Cube"]
-mesh = SubResource("BoxMesh_5thri")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FloatingBoat"]
+shape = SubResource("BoxShape3D_xm1ix")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Cube"]
-shape = SubResource("BoxShape3D_qn3cs")
-
-[node name="ProbeContainer" type="Node3D" parent="Cube"]
-
-[node name="Marker3D" type="Marker3D" parent="Cube/ProbeContainer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, -0.1, 1)
-
-[node name="Marker3D2" type="Marker3D" parent="Cube/ProbeContainer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 1)
-
-[node name="Marker3D3" type="Marker3D" parent="Cube/ProbeContainer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, -0.1, 1)
-
-[node name="Marker3D4" type="Marker3D" parent="Cube/ProbeContainer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, -0.1, 0)
-
-[node name="Marker3D5" type="Marker3D" parent="Cube/ProbeContainer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
-
-[node name="Marker3D6" type="Marker3D" parent="Cube/ProbeContainer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, -0.1, 0)
-
-[node name="Marker3D7" type="Marker3D" parent="Cube/ProbeContainer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, -0.1, -1)
-
-[node name="Marker3D8" type="Marker3D" parent="Cube/ProbeContainer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, -1)
-
-[node name="Marker3D9" type="Marker3D" parent="Cube/ProbeContainer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, -0.1, -1)
+[node name="BoatModel" parent="FloatingBoat" instance=ExtResource("5_5xxyr")]
