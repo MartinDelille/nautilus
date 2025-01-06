@@ -3,6 +3,8 @@ extends RigidBody3D
 @export var floating_force := 1.4
 @export var water_drag := 0.05
 @export var water_angular_drag := 0.05
+@export var longitudinal_speed := 20.
+@export var rotational_speed := 10.
 
 var submerged := false
 var probes = []
@@ -33,6 +35,13 @@ func _ready() -> void:
 
 
 func _physics_process(_delta: float) -> void:
+	var forward_vector = transform.basis.z
+	var advance = Input.get_axis("move_backward", "move_forward") * longitudinal_speed
+	var rotation_y = Input.get_axis("turn_right", "turn_left") * rotational_speed
+
+	apply_force(forward_vector * advance)
+	apply_torque(Vector3(0, rotation_y, 0))
+
 	submerged = false
 	for p in probes:
 		var depth = water.get_height(p.global_position) - p.global_position.y
