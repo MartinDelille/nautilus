@@ -1,9 +1,11 @@
-[gd_scene load_steps=9 format=3 uid="uid://ck2clqihnoa7h"]
+[gd_scene load_steps=14 format=3 uid="uid://ck2clqihnoa7h"]
 
 [ext_resource type="Script" path="res://map.gd" id="1_5selp"]
-[ext_resource type="PackedScene" uid="uid://5q2puw6ju4rm" path="res://water_plane.tscn" id="1_emv6m"]
-[ext_resource type="PackedScene" uid="uid://j2ahw1ou4mj7" path="res://floating.tscn" id="4_wisn2"]
+[ext_resource type="PackedScene" path="res://floating.tscn" id="4_wisn2"]
 [ext_resource type="PackedScene" uid="uid://df7tqccjhofm7" path="res://boat.blend" id="5_5xxyr"]
+[ext_resource type="Shader" path="res://water.gdshader" id="8_g7lda"]
+[ext_resource type="Texture2D" uid="uid://dd3w5t3unfab5" path="res://water_noise_texture_2d.tres" id="9_j7hod"]
+[ext_resource type="Script" path="res://water.gd" id="9_wbdb4"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ypqti"]
 sky_top_color = Color(0.463134, 0.854076, 0.962944, 1)
@@ -18,13 +20,45 @@ sky = SubResource("Sky_eoots")
 [sub_resource type="BoxShape3D" id="BoxShape3D_xm1ix"]
 size = Vector3(2, 1, 4)
 
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_8jw7r"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nl643"]
+render_priority = 0
+shader = ExtResource("8_g7lda")
+shader_parameter/albedo1 = Color(0, 0.321569, 0.431373, 1)
+shader_parameter/albedo2 = Color(0, 0.47451, 0.764706, 1)
+shader_parameter/metallic = 0.0
+shader_parameter/roughness = 0.02
+shader_parameter/fresnel_amount = 5.0
+shader_parameter/wave_direction1 = Vector2(2, 0)
+shader_parameter/wave_direction2 = Vector2(0, 1)
+shader_parameter/time_scale = 0.2
+shader_parameter/noise_scale = 10.0
+shader_parameter/height_scale = 0.15
+shader_parameter/color_deep = Color(0.105882, 0.294118, 0.329412, 1)
+shader_parameter/color_shallow = Color(0, 0.552941, 0.65098, 1)
+shader_parameter/beers_law = 2.0
+shader_parameter/depth_offset = -0.75
+shader_parameter/wave_time = -0.06
+shader_parameter/wave_amplitude = 0.65
+shader_parameter/wave_frequency = 0.158
+shader_parameter/wave_speed = 1.0
+shader_parameter/wave_angle = 0.0
+shader_parameter/wave = SubResource("NoiseTexture2D_8jw7r")
+shader_parameter/texture_normal1 = ExtResource("9_j7hod")
+shader_parameter/texture_normal2 = ExtResource("9_j7hod")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_5r26h"]
+material = SubResource("ShaderMaterial_nl643")
+size = Vector2(200, 200)
+subdivide_width = 200
+subdivide_depth = 200
+
 [node name="Map" type="Node3D"]
 script = ExtResource("1_5selp")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_vrchl")
-
-[node name="WaterPlane" parent="." instance=ExtResource("1_emv6m")]
 
 [node name="CameraPivot" type="Node3D" parent="."]
 transform = Transform3D(0.892273, -0.250329, 0.375747, 0.0323924, 0.865571, 0.499737, -0.450334, -0.43373, 0.780434, 0, 0, 0)
@@ -38,3 +72,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 11.71)
 shape = SubResource("BoxShape3D_xm1ix")
 
 [node name="BoatModel" parent="FloatingBoat" instance=ExtResource("5_5xxyr")]
+
+[node name="WaterPlane" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_5r26h")
+script = ExtResource("9_wbdb4")

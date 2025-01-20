@@ -1,7 +1,7 @@
 extends MeshInstance3D
 
 var time: float
-@onready var material = get_surface_override_material(0)
+@onready var material = mesh.surface_get_material(0)
 @onready var wave_angle = material.get_shader_parameter("wave_angle")
 @onready var wave_frequency = material.get_shader_parameter("wave_frequency")
 @onready var wave_amplitude = material.get_shader_parameter("wave_amplitude")
