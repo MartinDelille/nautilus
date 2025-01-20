@@ -1,6 +1,7 @@
-[gd_scene load_steps=14 format=3 uid="uid://ck2clqihnoa7h"]
+[gd_scene load_steps=15 format=3 uid="uid://ck2clqihnoa7h"]
 
 [ext_resource type="Script" path="res://map.gd" id="1_5selp"]
+[ext_resource type="Script" path="res://camera_pivot.gd" id="3_04a7x"]
 [ext_resource type="PackedScene" path="res://floating.tscn" id="4_wisn2"]
 [ext_resource type="PackedScene" uid="uid://df7tqccjhofm7" path="res://boat.blend" id="5_5xxyr"]
 [ext_resource type="Shader" path="res://water.gdshader" id="8_g7lda"]
@@ -60,11 +61,16 @@ script = ExtResource("1_5selp")
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_vrchl")
 
-[node name="CameraPivot" type="Node3D" parent="."]
-transform = Transform3D(0.892273, -0.250329, 0.375747, 0.0323924, 0.865571, 0.499737, -0.450334, -0.43373, 0.780434, 0, 0, 0)
+[node name="Yaw" type="Node3D" parent="."]
+rotation_order = 0
+script = ExtResource("3_04a7x")
 
-[node name="Camera3D" type="Camera3D" parent="CameraPivot"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 11.71)
+[node name="Pitch" type="Node3D" parent="Yaw"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 0.611527, 0.791224, 0, -0.791224, 0.611527, 0, 0, 0)
+
+[node name="Camera3D" type="Camera3D" parent="Yaw/Pitch"]
+transform = Transform3D(1, 8.9407e-08, 5.96046e-08, 0, 1, 5.96046e-08, -2.98023e-08, -5.96046e-08, 1, 0, 0, 20)
 
 [node name="FloatingBoat" parent="." instance=ExtResource("4_wisn2")]
 
