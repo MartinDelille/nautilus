@@ -1,5 +1,6 @@
-[gd_scene load_steps=8 format=3 uid="uid://ck2clqihnoa7h"]
+[gd_scene load_steps=9 format=3 uid="uid://ck2clqihnoa7h"]
 
+[ext_resource type="Script" path="res://map.gd" id="1_5selp"]
 [ext_resource type="PackedScene" uid="uid://5q2puw6ju4rm" path="res://water_plane.tscn" id="1_emv6m"]
 [ext_resource type="PackedScene" uid="uid://j2ahw1ou4mj7" path="res://floating.tscn" id="4_wisn2"]
 [ext_resource type="PackedScene" uid="uid://df7tqccjhofm7" path="res://boat.blend" id="5_5xxyr"]
@@ -18,6 +19,7 @@ sky = SubResource("Sky_eoots")
 size = Vector3(2, 1, 4)
 
 [node name="Map" type="Node3D"]
+script = ExtResource("1_5selp")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_vrchl")
