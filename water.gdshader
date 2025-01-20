@@ -77,9 +77,9 @@ void fragment() {
 
 	vec2 time1 = (TIME * wave_direction1) * time_scale;
 	vec2 time2 = (TIME * wave_direction2) * time_scale;
-	vec3 normal_blend =
-		mix(texture(texture_normal1, world_pos.xz + time1).rgb,
-			texture(texture_normal2, world_pos.xz + time2).rgb, 0.5);
+	vec3 normal_blend = mix(
+		texture(texture_normal1, world_pos.xz / noise_scale + time1).rgb,
+		texture(texture_normal2, world_pos.xz / noise_scale + time2).rgb, 0.5);
 
 	float fresnel = fresnel(fresnel_amount, NORMAL, VIEW);
 	vec3 surface_color = mix(albedo1, albedo2, fresnel);
