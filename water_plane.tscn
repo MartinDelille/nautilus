@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://5q2puw6ju4rm"]
 
-[ext_resource type="Shader" path="res://Water.gdshader" id="1_eglkr"]
+[ext_resource type="Shader" path="res://water.gdshader" id="1_eglkr"]
 [ext_resource type="Texture2D" uid="uid://dd3w5t3unfab5" path="res://water_noise_texture_2d.tres" id="2_2hg1f"]
 [ext_resource type="Script" path="res://water_plane.gd" id="3_5imwr"]
 
