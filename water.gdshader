@@ -1,23 +1,24 @@
 shader_type spatial;
 
-uniform vec3 albedo : source_color;
-uniform vec3 albedo2 : source_color;
+uniform vec3 albedo1 : source_color = vec3(0., 0.321569, 0.431373);
+uniform vec3 albedo2 : source_color = vec3(0., 0.47451, 0.764706);
 uniform float metallic : hint_range(0.0, 1.0) = 0;
 uniform float roughness : hint_range(0.0, 1.0) = 0.02;
+uniform float fresnel_amount : hint_range(0.0, 20.0) = 5.0;
 uniform sampler2D wave;
-uniform sampler2D texture_normal;
+uniform sampler2D texture_normal1;
 uniform sampler2D texture_normal2;
-uniform vec2 wave_direction = vec2(2.0, 0.0);
+uniform vec2 wave_direction1 = vec2(2.0, 0.0);
 uniform vec2 wave_direction2 = vec2(0.0, 1.0);
 uniform float time_scale : hint_range(0.0, 0.2, 0.005) = 0.025;
 uniform float noise_scale = 10;
 uniform float height_scale = 0.15;
-uniform vec4 color_deep : source_color;
-uniform vec4 color_shallow : source_color;
+uniform vec4 color_deep : source_color = vec4(0.105882, 0.294118, 0.329412, 1.);
+uniform vec4 color_shallow : source_color = vec4(0, 0.552941, 0.65098, 1);
 uniform float beers_law = 2.0;
 uniform float depth_offset = -0.75;
 uniform float wave_time = 0.0;
-uniform float wave_amplitude : hint_range(0.0, 1.0) = 0.2;
+uniform float wave_amplitude : hint_range(0.0, 10.0) = 0.2;
 uniform float wave_frequency : hint_range(0.0, 10.0) = 1.0;
 uniform float wave_speed : hint_range(0.0, 10.0) = 1.0;
 uniform float wave_angle = 0.0;
@@ -36,16 +37,15 @@ float fresnel(float amount, vec3 normal, vec3 view) {
 void vertex() {
 	world_pos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 	height = texture(wave, world_pos.xz / noise_scale + TIME * time_scale).r;
-	height = 4. * cos(TIME * 1. + world_pos.x);
 	VERTEX.y += height * height_scale;
 
-	vec2 wave_direction3 = vec2(cos(wave_angle), sin(wave_angle));
-	vec2 pos = VERTEX.xz * wave_direction3;
-	VERTEX.y = sin(dot(pos, wave_direction3) * wave_frequency +
-				   wave_time * wave_speed) *
-			   wave_amplitude;
+	vec2 wave_direction = vec2(cos(wave_angle), sin(wave_angle));
+	vec2 pos = VERTEX.xz;
+	VERTEX.y += sin(dot(pos, wave_direction) * wave_frequency +
+					wave_time * wave_speed) *
+				wave_amplitude;
 
-	// Compute partial derivatives
+	// Calculate partial derivatives
 	float dx = wave_amplitude * wave_frequency *
 			   cos(dot(pos, wave_direction) * wave_frequency +
 				   wave_time * wave_speed) *
@@ -56,8 +56,7 @@ void vertex() {
 			   wave_direction.y;
 
 	// Compute the normal
-	vec3 normal = normalize(vec3(-dx, 1.0, -dz));
-	NORMAL = normal;
+	NORMAL = normalize(vec3(-dx, 1.0, -dz));
 }
 
 void fragment() {
@@ -76,14 +75,14 @@ void fragment() {
 	vec3 color = mix(screen_color * depth_color, depth_color * 0.25,
 					 depth_blend_power * 0.5);
 
-	vec2 time = (TIME * wave_direction) * time_scale;
+	vec2 time1 = (TIME * wave_direction1) * time_scale;
 	vec2 time2 = (TIME * wave_direction2) * time_scale;
 	vec3 normal_blend =
-		mix(texture(texture_normal, world_pos.xz + time).rgb,
+		mix(texture(texture_normal1, world_pos.xz + time1).rgb,
 			texture(texture_normal2, world_pos.xz + time2).rgb, 0.5);
 
-	float fresnel = fresnel(5.0, NORMAL, VIEW);
-	vec3 surface_color = mix(albedo, albedo2, fresnel);
+	float fresnel = fresnel(fresnel_amount, NORMAL, VIEW);
+	vec3 surface_color = mix(albedo1, albedo2, fresnel);
 
 	ALBEDO = mix(surface_color, color, 0.75);
 	METALLIC = metallic;
