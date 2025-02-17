@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://dd5kq46uv3gdf"]
+
+[ext_resource type="Script" path="res://arrow.gd" id="1_fomv8"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_5nhss"]
+top_radius = 0.1
+bottom_radius = 0.1
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_ojqbk"]
+top_radius = 0.2
+bottom_radius = 0.0
+height = 0.2
+
+[node name="Arrow" type="Node3D"]
+script = ExtResource("1_fomv8")
+
+[node name="ShaftMesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 1, 0, 0)
+mesh = SubResource("CylinderMesh_5nhss")
+
+[node name="HeadMesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 2, 0, 0)
+mesh = SubResource("CylinderMesh_ojqbk")
