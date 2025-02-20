@@ -64,17 +64,6 @@ script = ExtResource("1_5selp")
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_vrchl")
 
-[node name="Yaw" type="Node3D" parent="."]
-rotation_order = 0
-script = ExtResource("3_04a7x")
-
-[node name="Pitch" type="Node3D" parent="Yaw"]
-unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 0.611527, 0.791224, 0, -0.791224, 0.611527, 0, 0, 0)
-
-[node name="Camera3D" type="Camera3D" parent="Yaw/Pitch"]
-transform = Transform3D(1, 8.9407e-08, 5.96046e-08, 0, 1, 5.96046e-08, -2.98023e-08, -5.96046e-08, 1, 0, 0, 20)
-
 [node name="FloatingBoat" parent="." instance=ExtResource("4_wisn2")]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="FloatingBoat"]
@@ -91,6 +80,18 @@ arrow_color = Color(1, 0.211765, 1, 1)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.33711, 0)
 visible = false
 arrow_color = Color(0.917647, 0.682353, 0.219608, 1)
+
+[node name="Yaw" type="Node3D" parent="FloatingBoat"]
+rotation_order = 0
+top_level = true
+script = ExtResource("3_04a7x")
+
+[node name="Pitch" type="Node3D" parent="FloatingBoat/Yaw"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 0.611527, 0.791224, 0, -0.791224, 0.611527, 0, 0, 0)
+
+[node name="Camera3D" type="Camera3D" parent="FloatingBoat/Yaw/Pitch"]
+transform = Transform3D(1, 8.9407e-08, 5.96046e-08, 0, 1, 5.96046e-08, -2.98023e-08, -5.96046e-08, 1, 0, 0, 20)
 
 [node name="WaterPlane" type="MeshInstance3D" parent="."]
 mesh = SubResource("PlaneMesh_5r26h")

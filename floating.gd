@@ -96,6 +96,8 @@ func _physics_process(_delta: float) -> void:
 			)
 			submerged = true
 
+	$Yaw.position = lerp($Yaw.position, position, 0.002)
+
 
 func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 	if submerged:
