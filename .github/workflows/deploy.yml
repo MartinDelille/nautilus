@@ -24,6 +24,23 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Cache Blender
+        id: cache-blender
+        uses: actions/cache@v3
+        with:
+          path: /usr/local/blender-4.3.2
+          key: blender-4.3.2-cache
+      - name: Install Blender
+        if: steps.cache-blender.outputs.cache-hit != 'true'
+        run: |
+          wget https://download.blender.org/release/Blender4.3/blender-4.3.2-linux-x64.tar.xz
+          tar -xvf blender-4.3.2-linux-x64.tar.xz
+          sudo mv blender-4.3.2-linux-x64 /usr/local/blender-4.3.2
+          sudo ln -s /usr/local/blender-4.3.2/blender /usr/local/bin/blender
+      - name: Setup Godot
+        run: |
+          mkdir ~/.config/godot
+          cp editor_settings-4.tres ~/.config/godot
       - name: Set up Godot
         uses: firebelley/godot-export@v6.0.0
         with:
