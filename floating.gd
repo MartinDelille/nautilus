@@ -75,7 +75,6 @@ func _physics_process(_delta: float) -> void:
 	else:
 		force -= sail_normal * wind_force
 
-	var direction = Vector3.RIGHT * Quaternion(Vector3.DOWN, global_rotation.y)
 	var keel_lift_axe = Vector3.BACK * Quaternion(Vector3.DOWN, global_rotation.y)
 	var keel_lift = -force.project(keel_lift_axe)
 
