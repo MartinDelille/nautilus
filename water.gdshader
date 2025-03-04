@@ -36,15 +36,15 @@ float fresnel(float amount, vec3 normal, vec3 view) {
 
 void vertex() {
 	world_pos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
-	height = texture(wave, world_pos.xz / noise_scale + TIME * time_scale).r;
-	VERTEX.y += height * height_scale;
+	height = texture(wave, world_pos.xz / noise_scale + TIME * time_scale).r *
+			 height_scale;
 
 	vec2 wave_direction = vec2(cos(wave_angle), sin(wave_angle));
-	vec2 pos = VERTEX.xz;
-	VERTEX.y += sin(dot(pos, wave_direction) * wave_frequency +
-					wave_time * wave_speed) *
-				wave_amplitude;
-
+	vec2 pos = world_pos.xz;
+	height += sin(dot(pos, wave_direction) * wave_frequency +
+				  wave_time * wave_speed) *
+			  wave_amplitude;
+	VERTEX.y = height;
 	// Calculate partial derivatives
 	float dx = wave_amplitude * wave_frequency *
 			   cos(dot(pos, wave_direction) * wave_frequency +

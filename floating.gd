@@ -19,7 +19,7 @@ var bome_bone_index := 0
 @onready var skeleton: Skeleton3D = $BoatModel/Armature/Skeleton3D
 @onready var wind: Node3D = $"../Wind"
 @onready var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
-@onready var water = get_node("/root/Map/WaterPlane")
+@onready var water = get_node("/root/Map/Ocean")
 
 
 func _ready() -> void:
