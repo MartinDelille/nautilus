@@ -46,13 +46,14 @@ visible = false
 arrow_color = Color(0.917647, 0.682353, 0.219608, 1)
 
 [node name="Yaw" type="Node3D" parent="FloatingBoat"]
+transform = Transform3D(-0.979575, 0, -0.201078, 0, 1, 0, 0.201078, 0, -0.979575, 0, 0, 0)
 rotation_order = 0
 top_level = true
 script = ExtResource("3_04a7x")
 
 [node name="Pitch" type="Node3D" parent="FloatingBoat/Yaw"]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 0.611527, 0.791224, 0, -0.791224, 0.611527, 0, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 0.953717, 0.300706, 0, -0.300706, 0.953717, 0, 0, 0)
 
 [node name="Camera3D" type="Camera3D" parent="FloatingBoat/Yaw/Pitch"]
 transform = Transform3D(1, 8.9407e-08, 5.96046e-08, 0, 1, 5.96046e-08, -2.98023e-08, -5.96046e-08, 1, 0, 0, 20)
