@@ -1,6 +1,7 @@
-[gd_scene load_steps=13 format=3 uid="uid://ck2clqihnoa7h"]
+[gd_scene load_steps=18 format=3 uid="uid://ck2clqihnoa7h"]
 
 [ext_resource type="Script" uid="uid://bgcdw8v0xso2p" path="res://map.gd" id="1_5selp"]
+[ext_resource type="Shader" uid="uid://ctcg62yvwqe31" path="res://sky.gdshader" id="2_gqbix"]
 [ext_resource type="Script" uid="uid://dyo57qdqevo5i" path="res://camera_pivot.gd" id="3_04a7x"]
 [ext_resource type="PackedScene" uid="uid://j2ahw1ou4mj7" path="res://floating.tscn" id="4_wisn2"]
 [ext_resource type="PackedScene" uid="uid://df7tqccjhofm7" path="res://boat.blend" id="5_5xxyr"]
@@ -9,15 +10,45 @@
 [ext_resource type="PackedScene" uid="uid://c861dwonfl1h2" path="res://gizmo.tscn" id="8_0acgq"]
 [ext_resource type="Script" uid="uid://b3kdkxrts504" path="res://ocean.gd" id="11_sb2pt"]
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ypqti"]
-sky_top_color = Color(0.463134, 0.854076, 0.962944, 1)
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_gqbix"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_oysan"]
+noise = SubResource("FastNoiseLite_gqbix")
+seamless = true
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_sb2pt"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_0t07s"]
+noise = SubResource("FastNoiseLite_sb2pt")
+seamless = true
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_oysan"]
+shader = ExtResource("2_gqbix")
+shader_parameter/skyColor = Color(0.40191, 0.589864, 1, 1)
+shader_parameter/horizonColor = Color(0.784314, 0.764706, 0.521569, 1)
+shader_parameter/cloudColor = Color(1, 1, 1, 1)
+shader_parameter/cloudNoise1 = SubResource("NoiseTexture2D_oysan")
+shader_parameter/cloudNoise2 = SubResource("NoiseTexture2D_0t07s")
+shader_parameter/a = 1.57
+shader_parameter/b = 0.29
+shader_parameter/c = 1.99
+shader_parameter/cloud_direction1 = Vector2(1, 0)
+shader_parameter/cloud_direction2 = Vector2(1, 2)
+shader_parameter/cloud_speed = 0.005
+shader_parameter/cloud_scale = Vector2(0.05, 0.15)
+shader_parameter/cloud_distance = 0.04
+shader_parameter/sun_col = Color(1, 1, 0.764706, 1)
+shader_parameter/sun_size = 0.088
+shader_parameter/sun_blur = 0.172
 
 [sub_resource type="Sky" id="Sky_eoots"]
-sky_material = SubResource("ProceduralSkyMaterial_ypqti")
+sky_material = SubResource("ShaderMaterial_oysan")
 
 [sub_resource type="Environment" id="Environment_vrchl"]
 background_mode = 2
 sky = SubResource("Sky_eoots")
+ambient_light_source = 3
+ambient_light_color = Color(0.858824, 0.901961, 0.709804, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_xm1ix"]
 size = Vector3(2, 1, 4)
@@ -27,6 +58,9 @@ script = ExtResource("1_5selp")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_vrchl")
+
+[node name="SunLight" type="DirectionalLight3D" parent="WorldEnvironment"]
+transform = Transform3D(1, 0, 0, 0, 0.989846, 0.142145, 0, -0.142145, 0.989846, 0, 0, 0)
 
 [node name="FloatingBoat" parent="." instance=ExtResource("4_wisn2")]
 
