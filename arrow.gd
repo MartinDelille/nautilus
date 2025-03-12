@@ -1,3 +1,4 @@
+@tool
 extends Node3D
 
 @export var arrow_color: Color = Color(1, 1, 1, 1):

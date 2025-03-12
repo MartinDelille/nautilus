@@ -22,6 +22,7 @@ uniform float wave_amplitude : hint_range(0.0, 10.0) = 0.2;
 uniform float wave_frequency : hint_range(0.0, 10.0) = 1.0;
 uniform float wave_speed : hint_range(0.0, 10.0) = 1.0;
 uniform float wave_angle = 0.0;
+uniform float clamp_distance = 100.;
 
 uniform sampler2D DEPTH_TEXTURE : hint_depth_texture, filter_linear_mipmap;
 uniform sampler2D SCREEN_TEXTURE : hint_screen_texture, filter_linear_mipmap;
@@ -36,24 +37,27 @@ float fresnel(float amount, vec3 normal, vec3 view) {
 
 void vertex() {
 	world_pos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
-	height = texture(wave, world_pos.xz / noise_scale + TIME * time_scale).r;
-	VERTEX.y += height * height_scale;
+	height = texture(wave, world_pos.xz / noise_scale + TIME * time_scale).r *
+			 height_scale;
 
 	vec2 wave_direction = vec2(cos(wave_angle), sin(wave_angle));
-	vec2 pos = VERTEX.xz;
-	VERTEX.y += sin(dot(pos, wave_direction) * wave_frequency +
-					wave_time * wave_speed) *
-				wave_amplitude;
-
+	vec2 pos = world_pos.xz;
+	height += sin(dot(pos, wave_direction) * wave_frequency +
+				  wave_time * wave_speed) *
+			  wave_amplitude;
+	float vertex_distance = distance(world_pos, vec3(0.));
+	vertex_distance = clamp(vertex_distance, 0, clamp_distance);
+	float vertex_distance_clamped = vertex_distance / clamp_distance;
+	VERTEX.y = height * (1. - vertex_distance_clamped);
 	// Calculate partial derivatives
 	float dx = wave_amplitude * wave_frequency *
 			   cos(dot(pos, wave_direction) * wave_frequency +
 				   wave_time * wave_speed) *
-			   wave_direction.x;
+			   wave_direction.x * (1. - vertex_distance_clamped);
 	float dz = wave_amplitude * wave_frequency *
 			   cos(dot(pos, wave_direction) * wave_frequency +
 				   wave_time * wave_speed) *
-			   wave_direction.y;
+			   wave_direction.y * (1. - vertex_distance_clamped);
 
 	// Compute the normal
 	NORMAL = normalize(vec3(-dx, 1.0, -dz));
