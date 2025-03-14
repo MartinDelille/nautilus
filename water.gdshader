@@ -18,16 +18,26 @@ uniform vec4 color_shallow : source_color = vec4(0, 0.552941, 0.65098, 1);
 uniform float beers_law = 2.0;
 uniform float depth_offset = -0.75;
 uniform float wave_time = 0.0;
-uniform float wave_amplitude : hint_range(0.0, 10.0) = 0.2;
-uniform float wave_frequency : hint_range(0.0, 10.0) = 1.0;
-uniform float wave_speed : hint_range(0.0, 10.0) = 1.0;
-uniform float wave_angle = 0.0;
 uniform float clamp_distance = 100.;
+
+group_uniforms wave1;
+uniform float angle1 = 0.0;
+uniform float stepness1 : hint_range(0.0, 1.0) = 0.3;
+uniform float wavelength1 = 40.;
+
+group_uniforms wave2;
+uniform float angle2 = 1.81;
+uniform float stepness2 : hint_range(0.0, 1.0) = 0.25;
+uniform float wavelength2 = 20.;
+
+group_uniforms wave3;
+uniform float angle3 = 0.9;
+uniform float stepness3 : hint_range(0.0, 1.0) = 0.15;
+uniform float wavelength3 = 10.;
 
 uniform sampler2D DEPTH_TEXTURE : hint_depth_texture, filter_linear_mipmap;
 uniform sampler2D SCREEN_TEXTURE : hint_screen_texture, filter_linear_mipmap;
 
-varying float height;
 varying vec3 world_pos;
 
 float fresnel(float amount, vec3 normal, vec3 view) {
@@ -35,32 +45,48 @@ float fresnel(float amount, vec3 normal, vec3 view) {
 			   amount);
 }
 
+// from https://catlikecoding.com/unity/tutorials/flow/waves/
+vec3 gerstnerWave(float angle, float stepness, float wavelength, vec2 p,
+				  float time, inout vec3 tangent, inout vec3 binormal) {
+	float k = TAU / wavelength;
+	float c = sqrt(9.81 / k);
+	vec2 d = vec2(cos(angle), sin(angle));
+	float f = k * (dot(d, p) - c * time);
+	float a = stepness / k;
+	// Compute the normal
+	tangent += vec3(1. - d.x * d.x * stepness * sin(f), stepness * cos(f),
+					-d.x * d.y * stepness * sin(f));
+	binormal += vec3(-d.x * d.y * stepness * sin(f), d.y * stepness * sin(f),
+					 1. - d.y * d.y * stepness * sin(f));
+
+	return vec3(d.x * a * cos(f), a * sin(f), d.y * a * cos(f));
+}
+
 void vertex() {
 	world_pos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
-	height = texture(wave, world_pos.xz / noise_scale + TIME * time_scale).r *
-			 height_scale;
 
-	vec2 wave_direction = vec2(cos(wave_angle), sin(wave_angle));
-	vec2 pos = world_pos.xz;
-	height += sin(dot(pos, wave_direction) * wave_frequency +
-				  wave_time * wave_speed) *
-			  wave_amplitude;
 	float vertex_distance = distance(world_pos, vec3(0.));
 	vertex_distance = clamp(vertex_distance, 0, clamp_distance);
 	float vertex_distance_clamped = vertex_distance / clamp_distance;
-	VERTEX.y = height * (1. - vertex_distance_clamped);
-	// Calculate partial derivatives
-	float dx = wave_amplitude * wave_frequency *
-			   cos(dot(pos, wave_direction) * wave_frequency +
-				   wave_time * wave_speed) *
-			   wave_direction.x * (1. - vertex_distance_clamped);
-	float dz = wave_amplitude * wave_frequency *
-			   cos(dot(pos, wave_direction) * wave_frequency +
-				   wave_time * wave_speed) *
-			   wave_direction.y * (1. - vertex_distance_clamped);
 
-	// Compute the normal
-	NORMAL = normalize(vec3(-dx, 1.0, -dz));
+	vec3 tangent = vec3(1., 0., 0.);
+	vec3 binormal = vec3(0., 0., 1.);
+	vec3 offset = vec3(0.);
+	offset += gerstnerWave(angle1, stepness1, wavelength1, world_pos.xz,
+						   wave_time, tangent, binormal);
+	offset += gerstnerWave(angle2, stepness2, wavelength2, world_pos.xz,
+						   wave_time, tangent, binormal);
+	offset += gerstnerWave(angle3, stepness3, wavelength3, world_pos.xz,
+						   wave_time, tangent, binormal);
+
+	offset.y +=
+		texture(wave, world_pos.xz / noise_scale + TIME * time_scale).r *
+			height_scale -
+		height_scale / 2.;
+
+	VERTEX += offset * (1. - vertex_distance_clamped);
+	NORMAL = mix(NORMAL, normalize(cross(binormal, tangent)),
+				 1. - vertex_distance_clamped);
 }
 
 void fragment() {
