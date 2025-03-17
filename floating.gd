@@ -1,12 +1,13 @@
 extends RigidBody3D
 
 @export var floating_force := 1.4
-@export var water_drag := 0.05
-@export var water_angular_drag := 0.05
+@export var water_drag := 0.045
+@export var water_angular_drag := .7
 @export var longitudinal_speed := 20.
-@export var rotational_speed := 10.
+@export var barre_rotation := 0.
+@export var barre_rotational_speed := 0.05
 @export var bome_rotation := 0.
-@export var bome_rotational_speed = 0.05
+@export var bome_rotational_speed = 0.03
 @export var air_density = 1.225
 @export var drag_coefficient = 1.0
 @export var lift_coefficient = 0.5
@@ -15,11 +16,13 @@ extends RigidBody3D
 var submerged := false
 var probes = []
 var bome_bone_index := 0
+var barre_bone_index := 0
 
-@onready var skeleton: Skeleton3D = $BoatModel/Armature/Skeleton3D
+@onready var bome_skeleton: Skeleton3D = $BoatModel/ArmatureBome/Skeleton3D
+@onready var barre_skeleton: Skeleton3D = $BoatModel/ArmatureBarre/Skeleton3D
 @onready var wind: Node3D = $"../Wind"
 @onready var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
-@onready var water = get_node("/root/Map/Ocean")
+@onready var water = $"../Ocean"
 
 
 func _ready() -> void:
@@ -30,7 +33,7 @@ func _ready() -> void:
 		probes.append(probe)
 	var size = $CollisionShape3D.shape.size
 	var shift_x = $CollisionShape3D.shape.size.x / 2
-	var shift_y = -$CollisionShape3D.shape.size.y / 4
+	var shift_y = -$CollisionShape3D.shape.size.y / 2
 	var shift_z = $CollisionShape3D.shape.size.z / 2
 	probes[0].transform.origin = Vector3(shift_x, shift_y, shift_z)
 	probes[1].transform.origin = Vector3(shift_x, shift_y, 0)
@@ -42,18 +45,28 @@ func _ready() -> void:
 	probes[7].transform.origin = Vector3(-shift_x, shift_y, 0)
 	probes[8].transform.origin = Vector3(-shift_x, shift_y, -shift_z)
 
-	bome_bone_index = skeleton.find_bone("BomeBone")
+	bome_bone_index = bome_skeleton.find_bone("BomeBone")
+	barre_bone_index = barre_skeleton.find_bone("BarreBone")
 
 
 func _physics_process(_delta: float) -> void:
-	var rotation_y = Input.get_axis("turn_right", "turn_left") * rotational_speed
+	barre_rotation += Input.get_axis("turn_right", "turn_left") * barre_rotational_speed
+	barre_rotation = clamp(barre_rotation, -PI / 2, PI / 2)
+	barre_skeleton.set_bone_pose_rotation(
+		barre_bone_index, Quaternion(Vector3(0, 1, 0), barre_rotation)
+	)
+
+	var barre_quaternion = Quaternion(Vector3.UP, barre_rotation - global_rotation.y)
+	var barre_force = Vector3.RIGHT * barre_quaternion
+	var prod = barre_force.dot(linear_velocity)
+	var barre_position = 4 * global_transform.basis.x
+	apply_force(barre_force * prod * 3, barre_position)
+
 	bome_rotation += Input.get_axis("turn_bome_right", "turn_bome_left") * bome_rotational_speed
 	bome_rotation = clamp(bome_rotation, -PI / 2, PI / 2)
-
-	apply_torque(Vector3(0, rotation_y, 0))
-
-	var bome_quaternion = Quaternion(Vector3(0, 0, 1), bome_rotation)
-	skeleton.set_bone_pose_rotation(bome_bone_index, bome_quaternion)
+	bome_skeleton.set_bone_pose_rotation(
+		bome_bone_index, Quaternion(Vector3(0, 0, 1), bome_rotation)
+	)
 
 	var sail_quaternion = Quaternion(Vector3.UP, bome_rotation - global_rotation.y)
 	var sail_normal = Vector3.BACK * sail_quaternion
