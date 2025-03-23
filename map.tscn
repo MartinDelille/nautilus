@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://ck2clqihnoa7h"]
+[gd_scene load_steps=21 format=3 uid="uid://ck2clqihnoa7h"]
 
 [ext_resource type="Script" uid="uid://bgcdw8v0xso2p" path="res://map.gd" id="1_5selp"]
 [ext_resource type="Shader" uid="uid://ctcg62yvwqe31" path="res://sky.gdshader" id="2_gqbix"]
@@ -8,6 +8,8 @@
 [ext_resource type="Script" uid="uid://c101trx2ups26" path="res://wind.gd" id="6_j8e2u"]
 [ext_resource type="PackedScene" uid="uid://dd5kq46uv3gdf" path="res://arrow.tscn" id="7_rrqqf"]
 [ext_resource type="PackedScene" uid="uid://c861dwonfl1h2" path="res://gizmo.tscn" id="8_0acgq"]
+[ext_resource type="PackedScene" uid="uid://brsiufh402kei" path="res://buoy.blend" id="10_oysan"]
+[ext_resource type="Script" uid="uid://cp0havsjr4u5d" path="res://buoy.gd" id="10_sb2pt"]
 [ext_resource type="Script" uid="uid://b3kdkxrts504" path="res://ocean.gd" id="11_sb2pt"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_gqbix"]
@@ -53,6 +55,9 @@ ambient_light_color = Color(0.858824, 0.901961, 0.709804, 1)
 [sub_resource type="BoxShape3D" id="BoxShape3D_xm1ix"]
 size = Vector3(2, 1, 4)
 
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_sb2pt"]
+height = 4.804
+
 [node name="Map" type="Node3D"]
 script = ExtResource("1_5selp")
 
@@ -95,6 +100,7 @@ transform = Transform3D(1, 8.9407e-08, 5.96046e-08, 0, 1, 5.96046e-08, -2.98023e
 [node name="Wind" type="Node3D" parent="."]
 script = ExtResource("6_j8e2u")
 wind_intensity = 0.5
+wind_vector = Vector3(0.5, 0, 0)
 
 [node name="Arrow" parent="Wind" instance=ExtResource("7_rrqqf")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.62211, 0)
@@ -105,3 +111,19 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0)
 
 [node name="Ocean" type="Node3D" parent="."]
 script = ExtResource("11_sb2pt")
+
+[node name="Buoy" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.4365, 0, 9.80385)
+script = ExtResource("10_sb2pt")
+floating_force = 18.12
+water_drag = 0.2
+courant = 26.97
+
+[node name="BuoyModel" parent="Buoy" instance=ExtResource("10_oysan")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.769505, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Buoy"]
+shape = SubResource("CylinderShape3D_sb2pt")
+
+[node name="Anchor" type="Marker3D" parent="Buoy"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -31.1681, 0)
