@@ -1,5 +1,6 @@
 extends RigidBody3D
 
+@export var sail_mode := true
 @export var floating_force := 1.4
 @export var water_drag := 0.045
 @export var water_angular_drag := .7
@@ -60,7 +61,10 @@ func _physics_process(_delta: float) -> void:
 	var barre_force = Vector3.RIGHT * barre_quaternion
 	var prod = barre_force.dot(linear_velocity)
 	var barre_position = 4 * global_transform.basis.x
-	apply_force(barre_force * prod * 3, barre_position)
+	if sail_mode:
+		apply_force(barre_force * prod * 3, barre_position)
+	else:
+		apply_torque(Vector3(0, barre_rotation * 50, 0))
 
 	bome_rotation += Input.get_axis("turn_bome_right", "turn_bome_left") * bome_rotational_speed
 	bome_rotation = clamp(bome_rotation, -PI / 2, PI / 2)
@@ -92,8 +96,12 @@ func _physics_process(_delta: float) -> void:
 	var keel_lift_axe = Vector3.BACK * Quaternion(Vector3.DOWN, global_rotation.y)
 	var keel_lift = -force.project(keel_lift_axe)
 
-	apply_force(force, Vector3(0, 2, 0))
-	apply_force(keel_lift, Vector3(0, -2, 0))
+	if sail_mode:
+		apply_force(force, Vector3(0, 2, 0))
+		apply_force(keel_lift, Vector3(0, -2, 0))
+	else:
+		var move = Input.get_axis("move_backward", "move_forward") * 40
+		apply_force(global_transform.basis.x * move)
 
 	$LiftForceArrow.rotation = Vector3.DOWN * bome_rotation
 	$LiftForceArrow.scale.x = lift_force
