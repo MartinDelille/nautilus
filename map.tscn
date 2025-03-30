@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://ck2clqihnoa7h"]
+[gd_scene load_steps=23 format=3 uid="uid://ck2clqihnoa7h"]
 
 [ext_resource type="Script" uid="uid://bgcdw8v0xso2p" path="res://map.gd" id="1_5selp"]
 [ext_resource type="Shader" uid="uid://ctcg62yvwqe31" path="res://sky.gdshader" id="2_gqbix"]
@@ -55,6 +55,14 @@ ambient_light_color = Color(0.858824, 0.901961, 0.709804, 1)
 [sub_resource type="BoxShape3D" id="BoxShape3D_xm1ix"]
 size = Vector3(2, 1, 4)
 
+[sub_resource type="PrismMesh" id="PrismMesh_sb2pt"]
+size = Vector3(1, 1, 0.11)
+subdivide_width = 7
+subdivide_height = 3
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_sb2pt"]
+size = Vector3(1000, 1000, 1000)
+
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_sb2pt"]
 height = 4.804
 
@@ -73,6 +81,93 @@ transform = Transform3D(1, 0, 0, 0, 0.989846, 0.142145, 0, -0.142145, 0.989846, 
 shape = SubResource("BoxShape3D_xm1ix")
 
 [node name="BoatModel" parent="FloatingBoat" instance=ExtResource("5_5xxyr")]
+
+[node name="Bome" type="Marker3D" parent="FloatingBoat"]
+
+[node name="Sail" type="SoftBody3D" parent="FloatingBoat"]
+transform = Transform3D(5.096, 2.583, 0, 0.001, 5.161, 0, 0, 0, 0.13, -1.34, 4.77, 0)
+rotation_edit_mode = 2
+mesh = SubResource("PrismMesh_sb2pt")
+linear_stiffness = 0.12
+pinned_points = [19, 34, 1, 0, 37, 52, 70, 55, 88, 73, 89, 72, 74, 87, 76, 85, 78, 83, 80, 81, 82, 79, 84, 77, 86, 75]
+attachments/0/point_index = 19
+attachments/0/spatial_attachment_path = NodePath("..")
+attachments/0/offset = Vector3(-0.057250023, 6.060375, -0.0071499995)
+attachments/1/point_index = 34
+attachments/1/spatial_attachment_path = NodePath("..")
+attachments/1/offset = Vector3(-0.057250023, 6.060375, 0.0071499995)
+attachments/2/point_index = 1
+attachments/2/spatial_attachment_path = NodePath("..")
+attachments/2/offset = Vector3(-0.04850006, 7.3505, -0.0071499995)
+attachments/3/point_index = 0
+attachments/3/spatial_attachment_path = NodePath("..")
+attachments/3/offset = Vector3(-0.04850006, 7.3505, 0.0071499995)
+attachments/4/point_index = 37
+attachments/4/spatial_attachment_path = NodePath("..")
+attachments/4/offset = Vector3(-0.065999985, 4.77025, -0.0071499995)
+attachments/5/point_index = 52
+attachments/5/spatial_attachment_path = NodePath("..")
+attachments/5/offset = Vector3(-0.065999985, 4.77025, 0.0071499995)
+attachments/6/point_index = 70
+attachments/6/spatial_attachment_path = NodePath("..")
+attachments/6/offset = Vector3(-0.074750066, 3.480125, 0.0071499995)
+attachments/7/point_index = 55
+attachments/7/spatial_attachment_path = NodePath("..")
+attachments/7/offset = Vector3(-0.074750066, 3.480125, -0.0071499995)
+attachments/8/point_index = 88
+attachments/8/spatial_attachment_path = NodePath("..")
+attachments/8/offset = Vector3(-0.08349991, 2.19, 0.0071499995)
+attachments/9/point_index = 73
+attachments/9/spatial_attachment_path = NodePath("..")
+attachments/9/offset = Vector3(-0.08349991, 2.19, -0.0071499995)
+attachments/10/point_index = 89
+attachments/10/spatial_attachment_path = NodePath("../Bome")
+attachments/10/offset = Vector3(-5.1795, 2.1890001, -0.0071499995)
+attachments/11/point_index = 72
+attachments/11/spatial_attachment_path = NodePath("../Bome")
+attachments/11/offset = Vector3(-5.1795, 2.1890001, 0.0071499995)
+attachments/12/point_index = 74
+attachments/12/spatial_attachment_path = NodePath("../Bome")
+attachments/12/offset = Vector3(-4.5425, 2.189125, 0.0071499995)
+attachments/13/point_index = 87
+attachments/13/spatial_attachment_path = NodePath("../Bome")
+attachments/13/offset = Vector3(-4.5425, 2.189125, -0.0071499995)
+attachments/14/point_index = 76
+attachments/14/spatial_attachment_path = NodePath("../Bome")
+attachments/14/offset = Vector3(-3.9055, 2.18925, 0.0071499995)
+attachments/15/point_index = 85
+attachments/15/spatial_attachment_path = NodePath("../Bome")
+attachments/15/offset = Vector3(-3.9055, 2.18925, -0.0071499995)
+attachments/16/point_index = 78
+attachments/16/spatial_attachment_path = NodePath("../Bome")
+attachments/16/offset = Vector3(-3.2684999, 2.1893752, 0.0071499995)
+attachments/17/point_index = 83
+attachments/17/spatial_attachment_path = NodePath("../Bome")
+attachments/17/offset = Vector3(-3.2684999, 2.1893752, -0.0071499995)
+attachments/18/point_index = 80
+attachments/18/spatial_attachment_path = NodePath("../Bome")
+attachments/18/offset = Vector3(-2.6315, 2.1895, 0.0071499995)
+attachments/19/point_index = 81
+attachments/19/spatial_attachment_path = NodePath("../Bome")
+attachments/19/offset = Vector3(-2.6315, 2.1895, -0.0071499995)
+attachments/20/point_index = 82
+attachments/20/spatial_attachment_path = NodePath("../Bome")
+attachments/20/offset = Vector3(-1.9944999, 2.189625, 0.0071499995)
+attachments/21/point_index = 79
+attachments/21/spatial_attachment_path = NodePath("../Bome")
+attachments/21/offset = Vector3(-1.9944999, 2.189625, -0.0071499995)
+attachments/22/point_index = 84
+attachments/22/spatial_attachment_path = NodePath("../Bome")
+attachments/22/offset = Vector3(-1.3575, 2.1897502, 0.0071499995)
+attachments/23/point_index = 77
+attachments/23/spatial_attachment_path = NodePath("../Bome")
+attachments/23/offset = Vector3(-1.3575, 2.1897502, -0.0071499995)
+attachments/24/point_index = 86
+attachments/24/spatial_attachment_path = NodePath("../Bome")
+attachments/24/offset = Vector3(-0.7205, 2.1898751, 0.0071499995)
+attachments/25/point_index = 75
+attachments/25/spatial_attachment_path = NodePath("../Bome")
+attachments/25/offset = Vector3(-0.7205, 2.1898751, -0.0071499995)
 
 [node name="LiftForceArrow" parent="FloatingBoat" instance=ExtResource("7_rrqqf")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.33711, 0)
@@ -95,15 +190,23 @@ unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 0.953717, 0.300706, 0, -0.300706, 0.953717, 0, 0, 0)
 
 [node name="Camera3D" type="Camera3D" parent="FloatingBoat/Yaw/Pitch"]
-transform = Transform3D(1, 8.9407e-08, 5.96046e-08, 0, 1, 5.96046e-08, -2.98023e-08, -5.96046e-08, 1, 0, 0, 20)
+transform = Transform3D(1, 8.9407e-08, 5.96046e-08, 0, 1, 5.96046e-08, -2.98023e-08, -5.96046e-08, 1, 0, 0, 39.36)
+
+[node name="WindArea" type="Area3D" parent="FloatingBoat"]
+wind_force_magnitude = 6.0
+wind_source_path = NodePath("../../Wind/Arrow")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FloatingBoat/WindArea"]
+shape = SubResource("BoxShape3D_sb2pt")
 
 [node name="Wind" type="Node3D" parent="."]
 script = ExtResource("6_j8e2u")
 wind_intensity = 0.5
+wind_distance = 30
 wind_vector = Vector3(0.5, 0, 0)
 
 [node name="Arrow" parent="Wind" instance=ExtResource("7_rrqqf")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.62211, 0)
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -30, 2, 0)
 visible = false
 
 [node name="Gizmo" parent="." instance=ExtResource("8_0acgq")]

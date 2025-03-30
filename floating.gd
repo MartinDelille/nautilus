@@ -67,6 +67,7 @@ func _physics_process(_delta: float) -> void:
 	bome_skeleton.set_bone_pose_rotation(
 		bome_bone_index, Quaternion(Vector3(0, 0, 1), bome_rotation)
 	)
+	$Bome.rotation.y = -bome_rotation
 
 	var sail_quaternion = Quaternion(Vector3.UP, bome_rotation - global_rotation.y)
 	var sail_normal = Vector3.BACK * sail_quaternion
@@ -108,7 +109,7 @@ func _physics_process(_delta: float) -> void:
 			)
 			submerged = true
 
-	$Yaw.position = lerp($Yaw.position, position, 0.002)
+	$Yaw.position = lerp($Yaw.position, position, 0.05)
 
 
 func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:

@@ -3,6 +3,7 @@ extends Node3D
 
 @export var wind_angle_degree := 0.
 @export var wind_intensity := 3.
+@export var wind_distance := 10
 
 @export var wind_angle_radiant: float:
 	get:
@@ -13,4 +14,7 @@ extends Node3D
 
 
 func _process(_delta: float) -> void:
-	$Arrow.rotation.y = -wind_angle_radiant
+	$Arrow.rotation.y = wind_angle_radiant - PI / 2
+	$Arrow.position = Vector3(
+		-wind_distance * cos(wind_angle_radiant), 2, wind_distance * sin(wind_angle_radiant)
+	)
