@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://ck2clqihnoa7h"]
+[gd_scene format=3 uid="uid://ck2clqihnoa7h"]
 
 [ext_resource type="Script" uid="uid://bgcdw8v0xso2p" path="res://map.gd" id="1_5selp"]
 [ext_resource type="Shader" uid="uid://ctcg62yvwqe31" path="res://sky.gdshader" id="2_gqbix"]
