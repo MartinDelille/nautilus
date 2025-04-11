@@ -2,11 +2,11 @@ extends RigidBody3D
 
 @export var sail_mode := true
 @export var floating_force := 1.4
-@export var water_drag := 0.045
+@export var water_drag := 0.05
 @export var water_angular_drag := .7
 @export var longitudinal_speed := 20.
 @export var barre_rotation := 0.
-@export var barre_rotational_speed := 0.05
+@export var barre_rotational_speed := 0.02
 @export var bome_rotation := 0.
 @export var bome_rotational_speed = 0.03
 @export var air_density = 1.225
@@ -113,14 +113,17 @@ func _physics_process(_delta: float) -> void:
 		var depth = water.get_height(p.global_position) - p.global_position.y
 		if depth > 0:
 			apply_force(
-				Vector3.UP * floating_force * gravity * depth, p.global_position - global_position
+				Vector3.UP * floating_force * gravity * pow(depth, 2),
+				p.global_position - global_position
 			)
 			submerged = true
+
+	var drag = -linear_velocity * linear_velocity.length() * .3
+	apply_force(drag)
 
 	$Yaw.position = lerp($Yaw.position, position, 0.05)
 
 
 func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 	if submerged:
-		state.linear_velocity *= 1 - water_drag
 		state.angular_velocity *= 1 - water_angular_drag
