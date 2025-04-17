@@ -79,34 +79,34 @@ func _physics_process(_delta: float) -> void:
 
 	var effective_wind_velocity = wind.wind_vector.dot(sail_normal)
 
-	# Drag and lift forces
-	var wind_force = (
+	# Drag and lift effects
+	var wind_effect = (
 		0.5 * air_density * drag_coefficient * sail_area * pow(effective_wind_velocity, 2)
 	)
-	var lift_force = (
+	var lift_effect = (
 		0.5 * air_density * lift_coefficient * sail_area * pow(effective_wind_velocity, 2)
 	)
 
-	var force = sail_direction * lift_force
+	var wind_force = sail_direction * lift_effect
 	if effective_wind_velocity > 0:
-		force += sail_normal * wind_force
+		wind_force += sail_normal * wind_effect
 	else:
-		force -= sail_normal * wind_force
+		wind_force -= sail_normal * wind_effect
 
 	var keel_lift_axe = Vector3.BACK * Quaternion(Vector3.DOWN, global_rotation.y)
-	var keel_lift = -force.project(keel_lift_axe)
+	var keel_lift = -wind_force.project(keel_lift_axe)
 
 	if sail_mode:
-		apply_force(force, Vector3(0, 2, 0))
+		apply_force(wind_force, Vector3(0, 2, 0))
 		apply_force(keel_lift, Vector3(0, -2, 0))
 	else:
 		var move = Input.get_axis("move_backward", "move_forward") * 40
 		apply_force(global_transform.basis.x * move)
 
 	$LiftForceArrow.rotation = Vector3.DOWN * bome_rotation
-	$LiftForceArrow.scale.x = lift_force
+	$LiftForceArrow.scale.x = lift_effect
 	$WindForceArrow.rotation = Vector3.DOWN * (bome_rotation + PI / 2)
-	$WindForceArrow.scale.x = wind_force
+	$WindForceArrow.scale.x = wind_effect
 
 	submerged = false
 	for p in probes:
