@@ -76,6 +76,8 @@ environment = SubResource("Environment_vrchl")
 transform = Transform3D(1, 0, 0, 0, 0.989846, 0.142145, 0, -0.142145, 0.989846, 0, 0, 0)
 
 [node name="FloatingBoat" parent="." instance=ExtResource("4_wisn2")]
+mass = 4.0
+keel_weight = 50
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="FloatingBoat"]
 shape = SubResource("BoxShape3D_xm1ix")
@@ -169,16 +171,6 @@ attachments/25/point_index = 75
 attachments/25/spatial_attachment_path = NodePath("../Bome")
 attachments/25/offset = Vector3(-0.7205, 2.1898751, -0.0071499995)
 
-[node name="LiftForceArrow" parent="FloatingBoat" instance=ExtResource("7_rrqqf")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.33711, 0)
-visible = false
-arrow_color = Color(1, 0.211765, 1, 1)
-
-[node name="WindForceArrow" parent="FloatingBoat" instance=ExtResource("7_rrqqf")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.33711, 0)
-visible = false
-arrow_color = Color(0.917647, 0.682353, 0.219608, 1)
-
 [node name="Yaw" type="Node3D" parent="FloatingBoat"]
 transform = Transform3D(-0.979575, 0, -0.201078, 0, 1, 0, 0.201078, 0, -0.979575, 0, 0, 0)
 rotation_order = 0
@@ -194,14 +186,14 @@ transform = Transform3D(1, 8.9407e-08, 5.96046e-08, 0, 1, 5.96046e-08, -2.98023e
 
 [node name="WindArea" type="Area3D" parent="FloatingBoat"]
 wind_force_magnitude = 6.0
-wind_source_path = NodePath("../../Wind/Arrow")
+wind_source_path = NodePath("../../Wind/WindSource")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="FloatingBoat/WindArea"]
 shape = SubResource("BoxShape3D_sb2pt")
 
 [node name="Wind" type="Node3D" parent="."]
 script = ExtResource("6_j8e2u")
-wind_intensity = 0.5
+wind_angle_degree = -90.0
 wind_distance = 30
 wind_vector = Vector3(0.5, 0, 0)
 

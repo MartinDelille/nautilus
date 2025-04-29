@@ -2,7 +2,7 @@ extends RigidBody3D
 
 @export var sail_mode := true
 @export var floating_force := 1.4
-@export var water_drag := 0.05
+@export var water_drag := 0.3
 @export var water_angular_drag := .7
 @export var longitudinal_speed := 20.
 @export var barre_rotation := 0.
@@ -13,6 +13,7 @@ extends RigidBody3D
 @export var drag_coefficient = 1.0
 @export var lift_coefficient = 0.5
 @export var sail_area = 20
+@export var keel_weight = 10
 
 var submerged := false
 var probes = []
@@ -57,12 +58,12 @@ func _physics_process(_delta: float) -> void:
 		barre_bone_index, Quaternion(Vector3(0, 1, 0), barre_rotation)
 	)
 
-	var barre_quaternion = Quaternion(Vector3.UP, barre_rotation - global_rotation.y)
-	var barre_force = Vector3.RIGHT * barre_quaternion
-	var prod = barre_force.dot(linear_velocity)
-	var barre_position = 4 * global_transform.basis.x
 	if sail_mode:
-		apply_force(barre_force * prod * 3, barre_position)
+		var barre_quaternion = Quaternion(transform.basis.y, -barre_rotation)
+		var barre_force_direction = transform.basis.z * barre_quaternion
+		var prod = -barre_force_direction.dot(linear_velocity) * 100
+
+		apply_force(barre_force_direction * prod, -15 * transform.basis.x)
 	else:
 		apply_torque(Vector3(0, barre_rotation * 50, 0))
 
@@ -73,10 +74,9 @@ func _physics_process(_delta: float) -> void:
 	)
 	$Bome.rotation.y = -bome_rotation
 
-	var sail_quaternion = Quaternion(Vector3.UP, bome_rotation - global_rotation.y)
-	var sail_normal = Vector3.BACK * sail_quaternion
-	var sail_direction = Vector3.RIGHT * sail_quaternion
-
+	var sail_quaternion = Quaternion(Vector3.UP, bome_rotation)
+	var sail_normal = transform.basis.z * sail_quaternion
+	var sail_direction = transform.basis.x * sail_quaternion
 	var effective_wind_velocity = wind.wind_vector.dot(sail_normal)
 
 	# Drag and lift effects
@@ -88,25 +88,19 @@ func _physics_process(_delta: float) -> void:
 	)
 
 	var wind_force = sail_direction * lift_effect
-	if effective_wind_velocity > 0:
-		wind_force += sail_normal * wind_effect
-	else:
+	if effective_wind_velocity < 0:
 		wind_force -= sail_normal * wind_effect
+	else:
+		wind_force += sail_normal * wind_effect
 
-	var keel_lift_axe = Vector3.BACK * Quaternion(Vector3.DOWN, global_rotation.y)
-	var keel_lift = -wind_force.project(keel_lift_axe)
-
+	var keel_lift = -wind_force.project(transform.basis.z)
 	if sail_mode:
-		apply_force(wind_force, Vector3(0, 2, 0))
-		apply_force(keel_lift, Vector3(0, -2, 0))
+		apply_force(wind_force, transform.basis.y * 4)
+		apply_force(keel_lift, Vector3.ZERO)
+		apply_force(Vector3.DOWN * keel_weight, -10 * transform.basis.y)
 	else:
 		var move = Input.get_axis("move_backward", "move_forward") * 40
 		apply_force(global_transform.basis.x * move)
-
-	$LiftForceArrow.rotation = Vector3.DOWN * bome_rotation
-	$LiftForceArrow.scale.x = lift_effect
-	$WindForceArrow.rotation = Vector3.DOWN * (bome_rotation + PI / 2)
-	$WindForceArrow.scale.x = wind_effect
 
 	submerged = false
 	for p in probes:
@@ -118,10 +112,11 @@ func _physics_process(_delta: float) -> void:
 			)
 			submerged = true
 
-	var drag = -linear_velocity * linear_velocity.length() * .3
+	var drag = -linear_velocity * linear_velocity.length() * water_drag
 	apply_force(drag)
 
 	$Yaw.position = lerp($Yaw.position, position, 0.05)
+	$WindArea.wind_force_magnitude = wind.wind_intensity * 20
 
 
 func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
