@@ -6,8 +6,6 @@
 [ext_resource type="PackedScene" uid="uid://j2ahw1ou4mj7" path="res://floating.tscn" id="4_wisn2"]
 [ext_resource type="PackedScene" uid="uid://df7tqccjhofm7" path="res://boat.blend" id="5_5xxyr"]
 [ext_resource type="Script" uid="uid://c101trx2ups26" path="res://wind.gd" id="6_j8e2u"]
-[ext_resource type="PackedScene" uid="uid://dd5kq46uv3gdf" path="res://arrow.tscn" id="7_rrqqf"]
-[ext_resource type="PackedScene" uid="uid://c861dwonfl1h2" path="res://gizmo.tscn" id="8_0acgq"]
 [ext_resource type="PackedScene" uid="uid://brsiufh402kei" path="res://buoy.blend" id="10_oysan"]
 [ext_resource type="Script" uid="uid://cp0havsjr4u5d" path="res://buoy.gd" id="10_sb2pt"]
 [ext_resource type="Script" uid="uid://b3kdkxrts504" path="res://ocean.gd" id="11_sb2pt"]
@@ -195,14 +193,11 @@ shape = SubResource("BoxShape3D_sb2pt")
 script = ExtResource("6_j8e2u")
 wind_angle_degree = -90.0
 wind_distance = 30
-wind_vector = Vector3(0.5, 0, 0)
+wind_angle_radiant = -1.5707963267948966
+wind_vector = Vector3(1.7881393e-07, 0, -2.9999998)
 
-[node name="Arrow" parent="Wind" instance=ExtResource("7_rrqqf")]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -30, 2, 0)
-visible = false
-
-[node name="Gizmo" parent="." instance=ExtResource("8_0acgq")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0)
+[node name="WindSource" type="Marker3D" parent="Wind"]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, -1.83697e-15, 2, -30)
 
 [node name="Ocean" type="Node3D" parent="."]
 script = ExtResource("11_sb2pt")
