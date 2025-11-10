@@ -27,6 +27,18 @@ var barre_bone_index := 0
 @onready var water = $"../Ocean"
 
 
+func _display_vector(_v: Vector3, _where := Vector3.ZERO, _color := Color(1., 1., 1.)):
+	pass
+
+
+func _apply_and_display_force(
+	force: Vector3, where := Vector3.ZERO, color := Color(1., 0., 1.), display_vector := true
+):
+	apply_force(force, where)
+	if display_vector:
+		_display_vector(force, where, color)
+
+
 func _ready() -> void:
 	for i in range(9):
 		var probe = Marker3D.new()
@@ -63,7 +75,8 @@ func _physics_process(_delta: float) -> void:
 		var barre_force_direction = transform.basis.z * barre_quaternion
 		var prod = -barre_force_direction.dot(linear_velocity) * 100
 
-		apply_force(barre_force_direction * prod, -15 * transform.basis.x)
+		_apply_and_display_force(barre_force_direction * prod, -15 * transform.basis.x)
+		_display_vector(linear_velocity, -15 * transform.basis.x, Color(0, 1, 0))
 	else:
 		apply_torque(Vector3(0, barre_rotation * 50, 0))
 
@@ -78,6 +91,8 @@ func _physics_process(_delta: float) -> void:
 	var sail_normal = transform.basis.z * sail_quaternion
 	var sail_direction = transform.basis.x * sail_quaternion
 	var effective_wind_velocity = wind.wind_vector.dot(sail_normal)
+	_display_vector(4 * sail_normal, transform.basis.y * 4, Color(0, 1, 0))
+	_display_vector(4 * sail_direction, transform.basis.y * 4, Color(1, 0, 0))
 
 	# Drag and lift effects
 	var wind_effect = (
@@ -95,25 +110,27 @@ func _physics_process(_delta: float) -> void:
 
 	var keel_lift = -wind_force.project(transform.basis.z)
 	if sail_mode:
-		apply_force(wind_force, transform.basis.y * 4)
-		apply_force(keel_lift, Vector3.ZERO)
-		apply_force(Vector3.DOWN * keel_weight, -10 * transform.basis.y)
+		_apply_and_display_force(wind_force, transform.basis.y * 4, Color(1, .5, .5))
+		_apply_and_display_force(keel_lift, Vector3.ZERO, Color(.5, .5, 1))
+		_apply_and_display_force(Vector3.DOWN * keel_weight, -10 * transform.basis.y)
 	else:
 		var move = Input.get_axis("move_backward", "move_forward") * 40
-		apply_force(global_transform.basis.x * move)
+		_apply_and_display_force(global_transform.basis.x * move)
 
 	submerged = false
 	for p in probes:
 		var depth = water.get_height(p.global_position) - p.global_position.y
 		if depth > 0:
-			apply_force(
+			_apply_and_display_force(
 				Vector3.UP * floating_force * gravity * pow(depth, 2),
-				p.global_position - global_position
+				p.global_position - global_position,
+				Color(1., 0, 1),
+				false
 			)
 			submerged = true
 
 	var drag = -linear_velocity * linear_velocity.length() * water_drag
-	apply_force(drag)
+	_apply_and_display_force(drag)
 
 	$Yaw.position = lerp($Yaw.position, position, 0.05)
 	$WindArea.wind_force_magnitude = wind.wind_intensity * 20
