@@ -51,6 +51,12 @@ jobs:
           cache: true
       - name: List files
         run: tree
+      - name: Fail if commit message contains 'wip'
+        run: |
+          if git log -1 --pretty=%B | grep -iq 'wip'; then
+            echo "Deployment blocked: commit message contains 'wip'."
+            exit 1
+          fi
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
