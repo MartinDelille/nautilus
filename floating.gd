@@ -27,9 +27,12 @@ var sheet_limit: float = 60.0
 
 
 func _display_vector(
-	_v: Vector3, _where := Vector3.ZERO, _color := Color(1., 1., 1.), _target: Node3D = null
+	v: Vector3, where := Vector3.ZERO, color := Color(1., 1., 1.), target: Node3D = null
 ):
-	pass
+	var p = position
+	if target != null:
+		p = target.position
+	DebugDraw3D.draw_arrow(p + where, p + where + v * 0.2, color, 0.1)
 
 
 func _display_quaternion(q: Quaternion, where := Vector3.ZERO, color := Color(1., 1., 0.)):
@@ -74,9 +77,13 @@ func _ready() -> void:
 	probes[8].transform.origin = Vector3(-shift_x, shift_y, -shift_z)
 
 	barre_bone_index = barre_skeleton.find_bone("BarreBone")
+	DebugDraw2D.config.text_default_size = 40
 
 
 func _physics_process(_delta: float) -> void:
+	DebugDraw2D.set_text("FPS:", Engine.get_frames_per_second(), 0)
+	DebugDraw2D.set_text("Rotation:", "%6.1f" % (rotation.y * 180 / PI))
+
 	barre_rotation += Input.get_axis("turn_right", "turn_left") * barre_rotational_speed
 	barre_rotation = clamp(barre_rotation, -PI / 2, PI / 2)
 	barre_skeleton.set_bone_pose_rotation(
