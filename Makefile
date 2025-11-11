@@ -1,11 +1,11 @@
 include .env
 
-default: g
+default: e
 
 check:
 	@if [ -z "$$GODOT_PROGRAM" ]; then echo "GODOT_PROGRAM is not set"; exit 1; fi
 
-g: check
+e: check
 	$$GODOT_PROGRAM project.godot
 
 r: check
@@ -18,3 +18,8 @@ l:
 	gdformat *.gd
 	gdlint *.gd
 	clang-format -i *.gdshader
+
+x: check
+	/bin/rm -rf ./export
+	mkdir -p ./export
+	$$GODOT_PROGRAM --headless --path . --export-release "html" ./export/index.html
