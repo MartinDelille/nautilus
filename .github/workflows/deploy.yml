@@ -1,8 +1,9 @@
-name: Deploy Godot project to GitHub Pages
+name: Deploy Godot project to GitHub Pages and Itch.io
 
 on:
   push:
     branches: ["**"]
+    tags: ["**"]
 
   workflow_dispatch:
 
@@ -15,8 +16,12 @@ concurrency:
   group: "pages"
   cancel-in-progress: false
 
+env:
+  BLENDER_VERSION: 4.3.2
+  GODOT_VERSION: 4.5.1
+
 jobs:
-  deploy:
+  build:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -24,28 +29,35 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Cache Blender
         id: cache-blender
         uses: actions/cache@v3
         with:
-          path: /usr/local/blender-4.3.2
-          key: blender-4.3.2-cache
+          path: /usr/local/blender-${{ env.BLENDER_VERSION }}
+          key: blender-${{ env.BLENDER_VERSION }}-cache
+
+      - name: Set Blender major version
+        run: echo "BLENDER_MAJOR_VERSION=$(echo ${{ env.BLENDER_VERSION }} | cut -d. -f1,2)" >> $GITHUB_ENV
+
       - name: Install Blender
         if: steps.cache-blender.outputs.cache-hit != 'true'
         run: |
-          wget https://download.blender.org/release/Blender4.3/blender-4.3.2-linux-x64.tar.xz
-          tar -xvf blender-4.3.2-linux-x64.tar.xz
-          sudo mv blender-4.3.2-linux-x64 /usr/local/blender-4.3.2
-          sudo ln -s /usr/local/blender-4.3.2/blender /usr/local/bin/blender
-      - name: Setup Godot
+          wget https://download.blender.org/release/Blender${{ env.BLENDER_MAJOR_VERSION }}/blender-${{ env.BLENDER_VERSION }}-linux-x64.tar.xz
+          tar -xvf blender-${{ env.BLENDER_VERSION }}-linux-x64.tar.xz
+          sudo mv blender-${{ env.BLENDER_VERSION }}-linux-x64 /usr/local/blender-${{ env.BLENDER_VERSION }}
+          sudo ln -s /usr/local/blender-${{ env.BLENDER_VERSION }}/blender /usr/local/bin/blender
+
+      - name: Copy Godot editor settings
         run: |
           mkdir ~/.config/godot
           cp editor_settings-4.tres ~/.config/godot
+
       - name: Set up Godot
         uses: firebelley/godot-export@v6.0.0
         with:
-          godot_executable_download_url: https://github.com/godotengine/godot/releases/download/4.4-stable/Godot_v4.4-stable_linux.x86_64.zip
-          godot_export_templates_download_url: https://github.com/godotengine/godot/releases/download/4.4-stable/Godot_v4.4-stable_export_templates.tpz
+          godot_executable_download_url: https://github.com/godotengine/godot/releases/download/${{ env.GODOT_VERSION }}-stable/Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64.zip
+          godot_export_templates_download_url: https://github.com/godotengine/godot/releases/download/${{ env.GODOT_VERSION }}-stable/Godot_v${{ env.GODOT_VERSION }}-stable_export_templates.tpz
           relative_project_path: ./
           relative_export_path: ./build/
           cache: true
@@ -57,12 +69,98 @@ jobs:
             echo "Deployment blocked: commit message contains 'wip'."
             exit 1
           fi
+
+      - name: Upload HTML artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: html
+          path: build/html/
+
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: build/windows/
+
+      - name: Create Release
+        if: startsWith(github.ref, 'refs/tags/')
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: Release ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset (HTML)
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: build/html/index.html
+          asset_name: index.html
+          asset_content_type: text/html
+
+      - name: Upload Release Asset (Windows)
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: build/windows/nautilus.exe
+          asset_name: nautilus.exe
+          asset_content_type: application/octet-stream
+
+  github-pages:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Download HTML artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: html
+          path: build/html/
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "build/html/"
+          path: build/html/
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  itch-io:
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        channel: [html, windows]
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ matrix.channel }}
+          path: build/${{ matrix.channel }}
+
+      - name: List files
+        run: tree
+
+      - uses: Ayowel/butler-to-itch@v1
+        with:
+          butler_key: ${{ secrets.BUTLER_API_KEY }}
+          itch_user: martindelille
+          itch_game: nautilus
+          files: |
+            ${{ matrix.channel }} build/${{ matrix.channel }}
