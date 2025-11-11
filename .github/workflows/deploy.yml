@@ -49,6 +49,13 @@ jobs:
           sudo mv blender-${{ env.BLENDER_VERSION }}-linux-x64 /usr/local/blender-${{ env.BLENDER_VERSION }}
           sudo ln -s /usr/local/blender-${{ env.BLENDER_VERSION }}/blender /usr/local/bin/blender
 
+      - name: Install godot_debug_draw_3d addon dependencies
+        run: |
+          mkdir -p addons
+          wget https://github.com/DmitriySalnikov/godot_debug_draw_3d/releases/download/1.6.0/debug-draw-3d_1.6.0.zip
+          unzip debug-draw-3d_1.6.0.zip -d .
+          mv debug_draw_3d-1.6.0/addons/debug_draw_3d addons
+
       - name: Copy Godot editor settings
         run: |
           mkdir ~/.config/godot
