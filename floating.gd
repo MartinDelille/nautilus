@@ -1,12 +1,11 @@
 extends RigidBody3D
 
-@export var sail_mode := true
-@export var floating_force := 1.4
+@export var floating_force := 4.6
 @export var water_drag := 0.3
 @export var water_angular_drag := .7
 @export var longitudinal_speed := 20.
 @export var barre_rotation := 0.
-@export var barre_rotational_speed := 0.02
+@export var barre_rotational_speed := 0.01
 @export var bome_rotation := 0.
 @export var bome_rotational_speed = 0.03
 @export var air_density = 1.225
@@ -70,15 +69,7 @@ func _physics_process(_delta: float) -> void:
 		barre_bone_index, Quaternion(Vector3(0, 1, 0), barre_rotation)
 	)
 
-	if sail_mode:
-		var barre_quaternion = Quaternion(transform.basis.y, -barre_rotation)
-		var barre_force_direction = transform.basis.z * barre_quaternion
-		var prod = -barre_force_direction.dot(linear_velocity) * 100
-
-		_apply_and_display_force(barre_force_direction * prod, -15 * transform.basis.x)
-		_display_vector(linear_velocity, -15 * transform.basis.x, Color(0, 1, 0))
-	else:
-		apply_torque(Vector3(0, barre_rotation * 50, 0))
+	apply_torque(Vector3(0, -barre_rotation * 100, 0))
 
 	bome_rotation += Input.get_axis("turn_bome_right", "turn_bome_left") * bome_rotational_speed
 	bome_rotation = clamp(bome_rotation, -PI / 2, PI / 2)
@@ -109,17 +100,13 @@ func _physics_process(_delta: float) -> void:
 		wind_force += sail_normal * wind_effect
 
 	var keel_lift = -wind_force.project(transform.basis.z)
-	if sail_mode:
-		_apply_and_display_force(wind_force, transform.basis.y * 4, Color(1, .5, .5))
-		_apply_and_display_force(keel_lift, Vector3.ZERO, Color(.5, .5, 1))
-		_apply_and_display_force(Vector3.DOWN * keel_weight, -10 * transform.basis.y)
-	else:
-		var move = Input.get_axis("move_backward", "move_forward") * 40
-		_apply_and_display_force(global_transform.basis.x * move)
+	_apply_and_display_force(wind_force, Vector3.ZERO, Color(0, 0, 1.))
+	_apply_and_display_force(keel_lift, Vector3.ZERO, Color(.9, .5, .1))
+	_apply_and_display_force(Vector3.DOWN * keel_weight, -10 * transform.basis.y)
 
 	submerged = false
 	for p in probes:
-		var depth = water.get_height(p.global_position) - p.global_position.y
+		var depth = water.get_height(p.global_position) - p.global_position.y + 0.5
 		if depth > 0:
 			_apply_and_display_force(
 				Vector3.UP * floating_force * gravity * pow(depth, 2),
