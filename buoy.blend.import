@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://df7tqccjhofm7"
-path="res://.godot/imported/boat.blend-16c967140823a3efa005cdbfa91e652e.scn"
+uid="uid://brsiufh402kei"
+path="res://.godot/imported/buoy.blend-7391de27db258d6263cce7ed7cd33e3e.scn"
 
 [deps]
 
-source_file="res://boat.blend"
-dest_files=["res://.godot/imported/boat.blend-16c967140823a3efa005cdbfa91e652e.scn"]
+source_file="res://buoy.blend"
+dest_files=["res://.godot/imported/buoy.blend-7391de27db258d6263cce7ed7cd33e3e.scn"]
 
 [params]
 

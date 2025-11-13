@@ -9,7 +9,7 @@ func _input(event: InputEvent) -> void:
 	var wheel_movement = Vector3.ZERO
 	if event is InputEventMouseMotion:
 		var mouse_movement = event.relative * PI / 300
-		if event.pressure:
+		if event.button_mask == MOUSE_BUTTON_LEFT:
 			yaw.rotate_y(-mouse_movement.x)
 			pitch.rotate_x(-mouse_movement.y)
 	if event is InputEventMouseButton:

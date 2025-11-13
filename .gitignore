@@ -2,3 +2,6 @@
 .godot/
 /android/
 *.blend1
+.env
+addons/
+export/
