@@ -82,39 +82,13 @@ jobs:
           name: windows
           path: build/windows/
 
-      - name: Create Release
-        if: startsWith(github.ref, 'refs/tags/')
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        if: github.ref_type == 'tag'
         with:
-          tag_name: ${{ github.ref_name }}
-          release_name: Release ${{ github.ref_name }}
-          draft: false
-          prerelease: false
-
-      - name: Upload Release Asset (HTML)
-        if: startsWith(github.ref, 'refs/tags/')
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: build/html/index.html
-          asset_name: index.html
-          asset_content_type: text/html
-
-      - name: Upload Release Asset (Windows)
-        if: startsWith(github.ref, 'refs/tags/')
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: build/windows/nautilus.exe
-          asset_name: nautilus.exe
-          asset_content_type: application/octet-stream
+          files: |
+            build/html/*
+            build/windows/*
 
   github-pages:
     needs: build
