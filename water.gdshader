@@ -35,9 +35,6 @@ uniform float angle3 = 0.9;
 uniform float stepness3 : hint_range(0.0, 1.0) = 0.15;
 uniform float wavelength3 = 10.;
 
-uniform sampler2D DEPTH_TEXTURE : hint_depth_texture, filter_linear_mipmap;
-uniform sampler2D SCREEN_TEXTURE : hint_screen_texture, filter_linear_mipmap;
-
 varying vec3 world_pos;
 
 float fresnel(float amount, vec3 normal, vec3 view) {
@@ -90,20 +87,9 @@ void vertex() {
 }
 
 void fragment() {
-	float depth_texture = texture(DEPTH_TEXTURE, SCREEN_UV).r * 2.0 - 1.0;
-	float depth =
-		PROJECTION_MATRIX[3][2] / (depth_texture + PROJECTION_MATRIX[2][2]);
-	float depth_blend = exp((depth + VERTEX.z + depth_offset) * -beers_law);
-	depth_blend = clamp(1.0 - depth_blend, 0.0, 1.0);
-	float depth_blend_power = clamp(pow(depth_blend, 2.5), 0.0, 1.0);
-
-	// Retrieving depth color and applying the deep and shallow colors
-	vec3 screen_color =
-		textureLod(SCREEN_TEXTURE, SCREEN_UV, depth_blend_power * 2.5).rgb;
-	vec3 depth_color =
-		mix(color_shallow.rgb, color_deep.rgb, depth_blend_power);
-	vec3 color = mix(screen_color * depth_color, depth_color * 0.25,
-					 depth_blend_power * 0.5);
+	// Compatibility pipeline: approximate depth blend using world_pos.y
+	float depth_blend_power = clamp((world_pos.y + 1.0) * 0.5, 0.0, 1.0);
+	vec3 color = mix(color_shallow.rgb, color_deep.rgb, depth_blend_power);
 
 	vec2 time1 = (TIME * wave_direction1) * time_scale;
 	vec2 time2 = (TIME * wave_direction2) * time_scale;
@@ -118,4 +104,7 @@ void fragment() {
 	METALLIC = metallic;
 	ROUGHNESS = roughness;
 	NORMAL_MAP = normal_blend;
+	// Make water transparent based on depth_blend_power (shallow = more
+	// transparent)
+	ALPHA = mix(0.4, 0.9, depth_blend_power);
 }
