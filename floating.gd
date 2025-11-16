@@ -18,6 +18,7 @@ var submerged := false
 var probes = []
 var bome_bone_index := 0
 var barre_bone_index := 0
+var debug = OS.is_debug_build()
 
 @onready var bome_skeleton: Skeleton3D = $BoatModel/ArmatureBome/Skeleton3D
 @onready var barre_skeleton: Skeleton3D = $BoatModel/ArmatureBarre/Skeleton3D
@@ -26,8 +27,9 @@ var barre_bone_index := 0
 @onready var water = $"../Ocean"
 
 
-func _display_vector(_v: Vector3, _where := Vector3.ZERO, _color := Color(1., 1., 1.)):
-	pass
+func _display_vector(v: Vector3, where := Vector3.ZERO, color := Color(1., 1., 1.)):
+	if debug:
+		DebugDraw3D.draw_arrow(position + where, position + where + v * 0.2, color, 0.1)
 
 
 func _apply_and_display_force(
@@ -60,9 +62,15 @@ func _ready() -> void:
 
 	bome_bone_index = bome_skeleton.find_bone("BomeBone")
 	barre_bone_index = barre_skeleton.find_bone("BarreBone")
+	if debug:
+		DebugDraw2D.config.text_default_size = 40
 
 
 func _physics_process(_delta: float) -> void:
+	if debug:
+		DebugDraw2D.set_text("FPS:", Engine.get_frames_per_second(), 0)
+		DebugDraw2D.set_text("Rotation:", "%6.1f" % (rotation.y * 180 / PI))
+
 	barre_rotation += Input.get_axis("turn_right", "turn_left") * barre_rotational_speed
 	barre_rotation = clamp(barre_rotation, -PI / 2, PI / 2)
 	barre_skeleton.set_bone_pose_rotation(
@@ -82,8 +90,10 @@ func _physics_process(_delta: float) -> void:
 	var sail_normal = transform.basis.z * sail_quaternion
 	var sail_direction = transform.basis.x * sail_quaternion
 	var effective_wind_velocity = wind.wind_vector.dot(sail_normal)
-	_display_vector(4 * sail_normal, transform.basis.y * 4, Color(0, 1, 0))
-	_display_vector(4 * sail_direction, transform.basis.y * 4, Color(1, 0, 0))
+	var sail_scale = 16
+	_display_vector(sail_scale * sail_normal, transform.basis.y * 4, Color(0, 1, 0))
+	_display_vector(sail_scale * sail_direction, transform.basis.y * 4, Color(1, 0, 0))
+	_display_vector(8 * wind.wind_vector, transform.basis.y * 8, Color(0, 1, 1))
 
 	# Drag and lift effects
 	var wind_effect = (
