@@ -64,27 +64,27 @@ size = Vector3(1000, 1000, 1000)
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_sb2pt"]
 height = 4.804
 
-[node name="Map" type="Node3D"]
+[node name="Map" type="Node3D" unique_id=1275466197]
 script = ExtResource("1_5selp")
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1544910985]
 environment = SubResource("Environment_vrchl")
 
-[node name="SunLight" type="DirectionalLight3D" parent="WorldEnvironment"]
+[node name="SunLight" type="DirectionalLight3D" parent="WorldEnvironment" unique_id=2016844019]
 transform = Transform3D(1, 0, 0, 0, 0.989846, 0.142145, 0, -0.142145, 0.989846, 0, 0, 0)
 
-[node name="FloatingBoat" parent="." instance=ExtResource("4_wisn2")]
+[node name="FloatingBoat" parent="." unique_id=1188005839 instance=ExtResource("4_wisn2")]
 mass = 4.0
 keel_weight = 50
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="FloatingBoat"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FloatingBoat" unique_id=1789612543]
 shape = SubResource("BoxShape3D_xm1ix")
 
-[node name="BoatModel" parent="FloatingBoat" instance=ExtResource("5_5xxyr")]
+[node name="BoatModel" parent="FloatingBoat" unique_id=997449631 instance=ExtResource("5_5xxyr")]
 
-[node name="Bome" type="Marker3D" parent="FloatingBoat"]
+[node name="Bome" type="Marker3D" parent="FloatingBoat" unique_id=1999406416]
 
-[node name="Sail" type="SoftBody3D" parent="FloatingBoat"]
+[node name="Sail" type="SoftBody3D" parent="FloatingBoat" unique_id=1588096620]
 transform = Transform3D(5.096, 2.583, 0, 0.001, 5.161, 0, 0, 0, 0.13, -1.34, 4.77, 0)
 rotation_edit_mode = 2
 mesh = SubResource("PrismMesh_sb2pt")
@@ -169,51 +169,51 @@ attachments/25/point_index = 75
 attachments/25/spatial_attachment_path = NodePath("../Bome")
 attachments/25/offset = Vector3(-0.7205, 2.1898751, -0.0071499995)
 
-[node name="Yaw" type="Node3D" parent="FloatingBoat"]
+[node name="Yaw" type="Node3D" parent="FloatingBoat" unique_id=1940015646]
 transform = Transform3D(-0.979575, 0, -0.201078, 0, 1, 0, 0.201078, 0, -0.979575, 0, 0, 0)
 rotation_order = 0
 top_level = true
 script = ExtResource("3_04a7x")
 
-[node name="Pitch" type="Node3D" parent="FloatingBoat/Yaw"]
+[node name="Pitch" type="Node3D" parent="FloatingBoat/Yaw" unique_id=2085138397]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 0.953717, 0.300706, 0, -0.300706, 0.953717, 0, 0, 0)
 
-[node name="Camera3D" type="Camera3D" parent="FloatingBoat/Yaw/Pitch"]
+[node name="Camera3D" type="Camera3D" parent="FloatingBoat/Yaw/Pitch" unique_id=1370402517]
 transform = Transform3D(1, 8.9407e-08, 5.96046e-08, 0, 1, 5.96046e-08, -2.98023e-08, -5.96046e-08, 1, 0, 0, 39.36)
 
-[node name="WindArea" type="Area3D" parent="FloatingBoat"]
+[node name="WindArea" type="Area3D" parent="FloatingBoat" unique_id=633284820]
 wind_force_magnitude = 6.0
 wind_source_path = NodePath("../../Wind/WindSource")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="FloatingBoat/WindArea"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FloatingBoat/WindArea" unique_id=1166658365]
 shape = SubResource("BoxShape3D_sb2pt")
 
-[node name="Wind" type="Node3D" parent="."]
+[node name="Wind" type="Node3D" parent="." unique_id=340035880]
 script = ExtResource("6_j8e2u")
 wind_angle_degree = -90.0
 wind_distance = 30
 wind_angle_radiant = -1.5707963267948966
 wind_vector = Vector3(1.7881393e-07, 0, -2.9999998)
 
-[node name="WindSource" type="Marker3D" parent="Wind"]
+[node name="WindSource" type="Marker3D" parent="Wind" unique_id=890995890]
 transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, -1.83697e-15, 2, -30)
 
-[node name="Ocean" type="Node3D" parent="."]
+[node name="Ocean" type="Node3D" parent="." unique_id=690899440]
 script = ExtResource("11_sb2pt")
 
-[node name="Buoy" type="RigidBody3D" parent="."]
+[node name="Buoy" type="RigidBody3D" parent="." unique_id=670450271]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.4365, 0, 9.80385)
 script = ExtResource("10_sb2pt")
 floating_force = 18.12
 water_drag = 0.2
 courant = 26.97
 
-[node name="BuoyModel" parent="Buoy" instance=ExtResource("10_oysan")]
+[node name="BuoyModel" parent="Buoy" unique_id=2133827484 instance=ExtResource("10_oysan")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.769505, 0)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Buoy"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Buoy" unique_id=236925111]
 shape = SubResource("CylinderShape3D_sb2pt")
 
-[node name="Anchor" type="Marker3D" parent="Buoy"]
+[node name="Anchor" type="Marker3D" parent="Buoy" unique_id=1970212296]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -31.1681, 0)
