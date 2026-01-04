@@ -6,7 +6,7 @@ const TILE_INDICES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 
 var OceanTile = preload("res://water_scene.tscn")
 var spawn_point = preload("res://grid_spawn_info.tres")
-var water_material = load("res://water_material.tres")
+var water_material = load("res://water_material.tres").duplicate()
 var tiles = {}
 var time: float
 
@@ -42,6 +42,7 @@ func create_ocean_tiles():
 		tile.mesh.set_subdivide_width(tile_subdivision)
 		tile.mesh.set_subdivide_depth(tile_subdivision)
 		tile.mesh.set_size(Vector2(TILE_WIDTH * tile_scale, TILE_WIDTH * tile_scale))
+		tile.mesh.material = water_material
 
 
 func _ready() -> void:
