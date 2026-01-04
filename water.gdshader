@@ -19,6 +19,7 @@ uniform float beers_law = 2.0;
 uniform float depth_offset = -0.75;
 uniform float wave_time = 0.0;
 uniform float clamp_distance = 100.;
+uniform vec3 clamp_center = vec3(0., 0., 0.);
 
 group_uniforms wave1;
 uniform float angle1 = 0.0;
@@ -62,7 +63,7 @@ vec3 gerstnerWave(float angle, float stepness, float wavelength, vec2 p,
 void vertex() {
 	world_pos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 
-	float vertex_distance = distance(world_pos, vec3(0.));
+	float vertex_distance = distance(world_pos, clamp_center);
 	vertex_distance = clamp(vertex_distance, 0, clamp_distance);
 	float vertex_distance_clamped = vertex_distance / clamp_distance;
 
