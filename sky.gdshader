@@ -15,9 +15,10 @@ uniform vec2 cloud_scale = vec2(1., 1.);
 uniform float cloud_distance = 0.;
 
 // Sun Stuff
-uniform vec3 sun_col : source_color = vec3(1.0);
-uniform float sun_size : hint_range(0.01, 1.0) = 1.0;
-uniform float sun_blur : hint_range(0.01, 1.0) = 0.01;
+uniform vec3 sun_color : source_color = vec3(1.0, 0.95, 0.85);
+uniform float sun_size : hint_range(0.00001, 1.0) = 0.1;
+// uniform float sun_blur : hint_range(0.01, 1.0) = 0.01;
+uniform float sun_softness : hint_range(0.001, 1.0) = 0.15;
 
 void sky() {
 	float clamped_y = clamp(EYEDIR.y, 0., 1.);
@@ -31,14 +32,23 @@ void sky() {
 					 .rgb;
 	cloud = cloud - smoothstep(0., EYEDIR.y, cloud_distance);
 	cloud = clamp(cloud, 0., 1.);
-	color += cloud;
+	// color += cloud;
 
-	float sun_distance = distance(EYEDIR.xyz, LIGHT0_DIRECTION);
-	float sun_power = 1.0 - clamp(sun_distance / sun_size, 0.0, 1.0);
-	float sun_disc = clamp(sun_power / sun_blur, sun_power, 1.0);
-	vec3 sun = sun_col * sun_disc;
+	/* ---------- SUN 1---------- */
+	// float sun_distance = distance(EYEDIR.xyz, LIGHT0_DIRECTION);
+	// float sun_power = 1.0 - clamp(sun_distance / sun_size, 0.0, 1.0);
+	// float sun_disc = clamp(sun_power / sun_blur, sun_power, 1.0);
+	// vec3 sun = sun_color * sun_disc;
 
-	color += sun;
+	//	color += sun;
+
+	/* ---------- SUN 2---------- */
+	float sun_dot = dot(EYEDIR, normalize(LIGHT0_DIRECTION));
+	float sun_mask = smoothstep(1.0 - sun_size, 1.0, sun_dot);
+	float sun_glow = smoothstep(1.0 - sun_size - sun_softness, 1.0, sun_dot);
+
+	// color += sun_color * sun_glow * 1.5;
+	// color = mix(color, sun_color, sun_mask);
 
 	COLOR = color;
 }
