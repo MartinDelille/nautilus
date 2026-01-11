@@ -6,7 +6,7 @@ const TILE_INDICES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 
 var OceanTile = preload("res://water_scene.tscn")
 var spawn_point = preload("res://grid_spawn_info.tres")
-var water_material = load("res://water_material.tres")
+var water_material = load("res://water_material.tres").duplicate()
 var tiles = {}
 var time: float
 
@@ -22,6 +22,7 @@ var time: float
 @onready var wave_stepness3 = water_material.get_shader_parameter("stepness3")
 @onready var wave_length3 = water_material.get_shader_parameter("wavelength3")
 
+@onready var boat = $"../FloatingBoat"
 @onready var camera = $"../FloatingBoat/Yaw/Pitch/Camera3D"
 
 
@@ -41,6 +42,7 @@ func create_ocean_tiles():
 		tile.mesh.set_subdivide_width(tile_subdivision)
 		tile.mesh.set_subdivide_depth(tile_subdivision)
 		tile.mesh.set_size(Vector2(TILE_WIDTH * tile_scale, TILE_WIDTH * tile_scale))
+		tile.mesh.material = water_material
 
 
 func _ready() -> void:
@@ -51,14 +53,18 @@ func _process(delta: float) -> void:
 	time += delta
 	water_material.set_shader_parameter("wave_time", time)
 	var camera_scale = camera.position.z / 10
+	var offset = boat.global_position if boat else Vector3.ZERO
+	offset.y = 0
 	water_material.set_shader_parameter("clamp_distance", camera_scale * TILE_WIDTH)
+	water_material.set_shader_parameter("clamp_center", offset)
 	if tiles.size() == TILE_INDICES.size():
 		for i in TILE_INDICES:
 			var tile = tiles[i]
 			var spawn_location = spawn_point.spawn_points[i]
 			var tile_scale = spawn_point.scale[i] * camera_scale
 			tile.position = (
-				Vector3(spawn_location.x, 0.0, spawn_location.y) * TILE_WIDTH * camera_scale
+				offset
+				+ Vector3(spawn_location.x, 0.0, spawn_location.y) * TILE_WIDTH * camera_scale
 			)
 			tile.mesh.set_size(Vector2(TILE_WIDTH * tile_scale, TILE_WIDTH * tile_scale))
 

@@ -6,36 +6,51 @@ extends RigidBody3D
 @export var longitudinal_speed := 20.
 @export var barre_rotation := 0.
 @export var barre_rotational_speed := 0.01
-@export var bome_rotation := 0.
-@export var bome_rotational_speed = 0.03
-@export var air_density = 1.225
-@export var drag_coefficient = 1.0
-@export var lift_coefficient = 0.5
-@export var sail_area = 20
-@export var keel_weight = 10
+@export var boom_rotational_speed := 0.03
+@export var air_density := 1.225
+@export var drag_coefficient := 1.0
+@export var lift_coefficient := 0.5
+@export var sail_area := 30
+@export var keel_weight := 100
 
 var submerged := false
 var probes = []
-var bome_bone_index := 0
 var barre_bone_index := 0
+var sheet_limit: float = 60.0
 
-@onready var bome_skeleton: Skeleton3D = $BoatModel/ArmatureBome/Skeleton3D
 @onready var barre_skeleton: Skeleton3D = $BoatModel/ArmatureBarre/Skeleton3D
 @onready var wind: Node3D = $"../Wind"
 @onready var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 @onready var water = $"../Ocean"
+@onready var boom: RigidBody3D = $Boom
+@onready var hinge: HingeJoint3D = $HingeJoint3D
 
 
-func _display_vector(_v: Vector3, _where := Vector3.ZERO, _color := Color(1., 1., 1.)):
+func _display_vector(
+	_v: Vector3, _where := Vector3.ZERO, _color := Color(1., 1., 1.), _target: Node3D = null
+):
 	pass
 
 
+func _display_quaternion(q: Quaternion, where := Vector3.ZERO, color := Color(1., 1., 0.)):
+	var v := Vector3(q.x, q.y, q.z) * q.get_angle() * 100
+	_display_vector(v, where, color)
+
+
 func _apply_and_display_force(
-	force: Vector3, where := Vector3.ZERO, color := Color(1., 0., 1.), display_vector := true
+	force: Vector3,
+	where := Vector3.ZERO,
+	color := Color(1., 0., 1.),
+	display_vector := true,
+	target: Node3D = null
 ):
-	apply_force(force, where)
+	if target == null:
+		target = self
+	else:
+		where += target.global_position
+	target.apply_force(force, where)
 	if display_vector:
-		_display_vector(force, where, color)
+		_display_vector(force, where, color, target)
 
 
 func _ready() -> void:
@@ -58,7 +73,6 @@ func _ready() -> void:
 	probes[7].transform.origin = Vector3(-shift_x, shift_y, 0)
 	probes[8].transform.origin = Vector3(-shift_x, shift_y, -shift_z)
 
-	bome_bone_index = bome_skeleton.find_bone("BomeBone")
 	barre_bone_index = barre_skeleton.find_bone("BarreBone")
 
 
@@ -71,19 +85,37 @@ func _physics_process(_delta: float) -> void:
 
 	apply_torque(Vector3(0, -barre_rotation * 100, 0))
 
-	bome_rotation += Input.get_axis("turn_bome_right", "turn_bome_left") * bome_rotational_speed
-	bome_rotation = clamp(bome_rotation, -PI / 2, PI / 2)
-	bome_skeleton.set_bone_pose_rotation(
-		bome_bone_index, Quaternion(Vector3(0, 0, 1), bome_rotation)
+	var instant_rotation: float = (
+		Input.get_axis("move_backward", "move_forward") * boom_rotational_speed
 	)
-	$Bome.rotation.y = -bome_rotation
 
-	var sail_quaternion = Quaternion(Vector3.UP, bome_rotation)
-	var sail_normal = transform.basis.z * sail_quaternion
-	var sail_direction = transform.basis.x * sail_quaternion
+	sheet_limit += instant_rotation * 20
+	sheet_limit = clamp(sheet_limit, 10, 80)
+	hinge.set_param(HingeJoint3D.PARAM_LIMIT_LOWER, deg_to_rad(-sheet_limit))
+	hinge.set_param(HingeJoint3D.PARAM_LIMIT_UPPER, deg_to_rad(sheet_limit))
+
+	var boom_length = 4  # Replace with actual length if available
+	var boom_force_position = (
+		boom.global_transform.origin - boom.global_transform.basis.x * boom_length
+	)
+	boom_force_position = -boom.global_transform.basis.x * boom_length
+	_apply_and_display_force(
+		wind.wind_vector * 5,
+		boom_force_position,
+		Color(1, 1, 0),
+		true,
+		boom,
+	)
+
+	var sail_quaternion = boom.global_transform.basis.get_rotation_quaternion()
+	var sail_normal = sail_quaternion * transform.basis.z
+	var sail_direction = sail_quaternion * transform.basis.x
+
 	var effective_wind_velocity = wind.wind_vector.dot(sail_normal)
-	_display_vector(4 * sail_normal, transform.basis.y * 4, Color(0, 1, 0))
-	_display_vector(4 * sail_direction, transform.basis.y * 4, Color(1, 0, 0))
+	var sail_scale = 16
+	_display_vector(sail_scale * sail_normal, transform.basis.y * 4, Color(0, 1, 0))
+	_display_vector(sail_scale * sail_direction, transform.basis.y * 4, Color(1, 0, 0))
+	_display_vector(8 * wind.wind_vector, transform.basis.y * 8, Color(0, 1, 1))
 
 	# Drag and lift effects
 	var wind_effect = (
@@ -100,8 +132,8 @@ func _physics_process(_delta: float) -> void:
 		wind_force += sail_normal * wind_effect
 
 	var keel_lift = -wind_force.project(transform.basis.z)
-	_apply_and_display_force(wind_force, Vector3.ZERO, Color(0, 0, 1.))
-	_apply_and_display_force(keel_lift, Vector3.ZERO, Color(.9, .5, .1))
+	_apply_and_display_force(wind_force, boom_force_position, Color(0, 0, 1.), true, boom)
+	_apply_and_display_force(keel_lift, Vector3.ZERO, Color(.9, .5, .1), true, boom)
 	_apply_and_display_force(Vector3.DOWN * keel_weight, -10 * transform.basis.y)
 
 	submerged = false
