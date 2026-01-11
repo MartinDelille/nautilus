@@ -194,7 +194,7 @@ script = ExtResource("6_j8e2u")
 wind_angle_degree = -90.0
 wind_distance = 30
 wind_angle_radiant = -1.5707963267948966
-wind_vector = Vector3(1.7881393e-07, 0, -2.9999998)
+wind_vector = Vector3(-1.7881393e-07, 0, 2.9999998)
 
 [node name="WindSource" type="Marker3D" parent="Wind" unique_id=890995890]
 transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, -1.83697e-15, 2, -30)
