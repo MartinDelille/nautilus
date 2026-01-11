@@ -97,8 +97,10 @@ func _physics_process(_delta: float) -> void:
 	var sail_normal = transform.basis.z * sail_quaternion
 	var sail_direction = transform.basis.x * sail_quaternion
 	var effective_wind_velocity = wind.wind_vector.dot(sail_normal)
-	_display_vector(4 * sail_normal, transform.basis.y * 4, Color(0, 1, 0))
-	_display_vector(4 * sail_direction, transform.basis.y * 4, Color(1, 0, 0))
+	var sail_scale = 16
+	_display_vector(sail_scale * sail_normal, transform.basis.y * 4, Color(0, 1, 0))
+	_display_vector(sail_scale * sail_direction, transform.basis.y * 4, Color(1, 0, 0))
+	_display_vector(8 * wind.wind_vector, transform.basis.y * 8, Color(0, 1, 1))
 
 	# Drag and lift effects
 	var wind_effect = (
