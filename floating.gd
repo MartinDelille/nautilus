@@ -26,16 +26,31 @@ var barre_bone_index := 0
 @onready var water = $"../Ocean"
 
 
-func _display_vector(_v: Vector3, _where := Vector3.ZERO, _color := Color(1., 1., 1.)):
+func _display_vector(
+	_v: Vector3, _where := Vector3.ZERO, _color := Color(1., 1., 1.), _target: Node3D = null
+):
 	pass
 
 
+func _display_quaternion(q: Quaternion, where := Vector3.ZERO, color := Color(1., 1., 0.)):
+	var v := Vector3(q.x, q.y, q.z) * q.get_angle() * 100
+	_display_vector(v, where, color)
+
+
 func _apply_and_display_force(
-	force: Vector3, where := Vector3.ZERO, color := Color(1., 0., 1.), display_vector := true
+	force: Vector3,
+	where := Vector3.ZERO,
+	color := Color(1., 0., 1.),
+	display_vector := true,
+	target: Node3D = null
 ):
-	apply_force(force, where)
+	if target == null:
+		target = self
+	else:
+		where += target.global_position
+	target.apply_force(force, where)
 	if display_vector:
-		_display_vector(force, where, color)
+		_display_vector(force, where, color, target)
 
 
 func _ready() -> void:
