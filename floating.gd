@@ -7,12 +7,12 @@ extends RigidBody3D
 @export var barre_rotation := 0.
 @export var barre_rotational_speed := 0.01
 @export var bome_rotation := 0.
-@export var bome_rotational_speed = 0.03
-@export var air_density = 1.225
-@export var drag_coefficient = 1.0
-@export var lift_coefficient = 0.5
-@export var sail_area = 20
-@export var keel_weight = 10
+@export var bome_rotational_speed := 0.03
+@export var air_density := 1.225
+@export var drag_coefficient := 1.0
+@export var lift_coefficient := 0.5
+@export var sail_area := 20
+@export var keel_weight := 10
 
 var submerged := false
 var probes = []
