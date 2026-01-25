@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://j2ahw1ou4mj7" path="res://floating.tscn" id="4_wisn2"]
 [ext_resource type="PackedScene" uid="uid://df7tqccjhofm7" path="res://boat.blend" id="5_5xxyr"]
 [ext_resource type="Script" uid="uid://c101trx2ups26" path="res://wind.gd" id="6_j8e2u"]
+[ext_resource type="PackedScene" uid="uid://bq1de6cc73x33" path="res://island/island.blend" id="10_0t07s"]
 [ext_resource type="PackedScene" uid="uid://brsiufh402kei" path="res://buoy.blend" id="10_oysan"]
 [ext_resource type="Script" uid="uid://cp0havsjr4u5d" path="res://buoy.gd" id="10_sb2pt"]
 [ext_resource type="Script" uid="uid://b3kdkxrts504" path="res://ocean.gd" id="11_sb2pt"]
@@ -251,3 +252,6 @@ shape = SubResource("CylinderShape3D_sb2pt")
 
 [node name="Anchor" type="Marker3D" parent="Buoy" unique_id=1970212296]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -31.1681, 0)
+
+[node name="Island" parent="." unique_id=1300191643 instance=ExtResource("10_0t07s")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 157.19684, 0, 253.47583)
