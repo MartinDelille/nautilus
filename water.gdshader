@@ -13,13 +13,17 @@ uniform vec2 wave_direction2 = vec2(0.0, 1.0);
 uniform float time_scale : hint_range(0.0, 0.2, 0.005) = 0.025;
 uniform float noise_scale = 10;
 uniform float height_scale = 0.15;
-uniform vec4 color_deep : source_color = vec4(0.105882, 0.294118, 0.329412, 1.);
-uniform vec4 color_shallow : source_color = vec4(0, 0.552941, 0.65098, 1);
 uniform float beers_law = 2.0;
 uniform float depth_offset = -0.75;
 uniform float wave_time = 0.0;
 uniform float clamp_distance = 100.;
 uniform vec3 clamp_center = vec3(0., 0., 0.);
+
+group_uniforms depth;
+uniform vec4 color_deep : source_color = vec4(0.105882, 0.294118, 0.329412, 1.);
+uniform vec4 color_shallow : source_color = vec4(0, 0.552941, 0.65098, 1);
+uniform sampler2D depth_texture : hint_depth_texture;
+uniform float depth_factor : hint_range(1., 50, 0.1) = 9.;
 
 group_uniforms wave1;
 uniform float angle1 = 0.0;
@@ -88,9 +92,15 @@ void vertex() {
 }
 
 void fragment() {
-	// Compatibility pipeline: approximate depth blend using world_pos.y
-	float depth_blend_power = clamp((world_pos.y + 1.0) * 0.5, 0.0, 1.0);
-	vec3 color = mix(color_shallow.rgb, color_deep.rgb, depth_blend_power);
+	float depth = texture(depth_texture, SCREEN_UV).x;
+#if CURRENT_RENDERER == RENDERER_COMPATIBILITY
+	depth = depth * 2. - 1.;
+#endif
+	depth = PROJECTION_MATRIX[3][2] / (depth + PROJECTION_MATRIX[2][2]);
+	depth += VERTEX.z;
+	depth = clamp(depth / depth_factor, 0., 1.);
+
+	vec3 color = mix(color_shallow.rgb, color_deep.rgb, depth);
 
 	vec2 time1 = (TIME * wave_direction1) * time_scale;
 	vec2 time2 = (TIME * wave_direction2) * time_scale;
@@ -105,7 +115,5 @@ void fragment() {
 	METALLIC = metallic;
 	ROUGHNESS = roughness;
 	NORMAL_MAP = normal_blend;
-	// Make water transparent based on depth_blend_power (shallow = more
-	// transparent)
-	ALPHA = mix(0.4, 0.9, depth_blend_power);
+	ALPHA = mix(0.6, 0.95, depth);
 }
