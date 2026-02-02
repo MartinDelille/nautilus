@@ -71,6 +71,10 @@ jobs:
           unzip -q templates.tpz -d "$HOME/.local/share/godot/templates/${GODOT_VERSION}"
           ls -l $HOME
 
+      - name: Import Godot project
+        run: |
+          $HOME/Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64 --headless --import
+
       - name: Export HTML build
         run: |
           ls -l $HOME
