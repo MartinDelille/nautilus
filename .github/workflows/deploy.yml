@@ -69,9 +69,11 @@ jobs:
           wget -q "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_export_templates.tpz" -O templates.tpz
           mkdir -p "$HOME/.local/share/godot/templates/${GODOT_VERSION}"
           unzip -q templates.tpz -d "$HOME/.local/share/godot/templates/${GODOT_VERSION}"
+          ls -l Godot*
 
       - name: Export HTML build
         run: |
+          ls -l Godot*
           mkdir -p ./build/html
           Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64 --headless --path . --export-release "html" ./build/html/index.html
 
