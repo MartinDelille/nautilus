@@ -24,7 +24,6 @@ jobs:
   build:
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -34,33 +33,55 @@ jobs:
         id: cache-blender
         uses: actions/cache@v3
         with:
-          path: /usr/local/blender-${{ env.BLENDER_VERSION }}
+          path: $HOME/blender-${{ env.BLENDER_VERSION }}
           key: blender-${{ env.BLENDER_VERSION }}-cache
 
-      - name: Set Blender major version
-        run: echo "BLENDER_MAJOR_VERSION=$(echo ${{ env.BLENDER_VERSION }} | cut -d. -f1,2)" >> $GITHUB_ENV
+      - name: Cache Godot
+        id: cache-godot
+        uses: actions/cache@v3
+        with:
+          path: $HOME/godot-${{ env.GODOT_VERSION }}
+          key: godot-${{ env.GODOT_VERSION }}-cache
 
       - name: Install Blender
         if: steps.cache-blender.outputs.cache-hit != 'true'
         run: |
-          wget https://download.blender.org/release/Blender${{ env.BLENDER_MAJOR_VERSION }}/blender-${{ env.BLENDER_VERSION }}-linux-x64.tar.xz
-          tar -xvf blender-${{ env.BLENDER_VERSION }}-linux-x64.tar.xz
-          sudo mv blender-${{ env.BLENDER_VERSION }}-linux-x64 /usr/local/blender-${{ env.BLENDER_VERSION }}
-          sudo ln -s /usr/local/blender-${{ env.BLENDER_VERSION }}/blender /usr/local/bin/blender
+          BLENDER_MAJOR_VERSION=$(echo $BLENDER_VERSION | cut -d. -f1,2)
+          wget "https://download.blender.org/release/Blender${BLENDER_MAJOR_VERSION}/blender-${BLENDER_VERSION}-linux-x64.tar.xz"
+          tar -xvf blender-${BLENDER_VERSION}-linux-x64.tar.xz
+          mkdir -p ~/blender-${BLENDER_VERSION}
+          mv blender-${BLENDER_VERSION}-linux-x64/* ~/blender-${BLENDER_VERSION}/
 
       - name: Copy Godot editor settings
         run: |
           mkdir ~/.config/godot
           cp editor_settings-4.tres ~/.config/godot
 
-      - name: Set up Godot
-        uses: firebelley/godot-export@v6.0.0
-        with:
-          godot_executable_download_url: https://github.com/godotengine/godot/releases/download/${{ env.GODOT_VERSION }}-stable/Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64.zip
-          godot_export_templates_download_url: https://github.com/godotengine/godot/releases/download/${{ env.GODOT_VERSION }}-stable/Godot_v${{ env.GODOT_VERSION }}-stable_export_templates.tpz
-          relative_project_path: ./
-          relative_export_path: ./build/
-          cache: true
+      - name: Download Godot editor
+        if: steps.cache-godot.outputs.cache-hit != 'true'
+        run: |
+          wget -q "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip" -O godot.zip
+          unzip -q godot.zip -d godottmp
+          GODOT_BIN=$(ls godottmp | grep -E "Godot_v.*linux.x86_64$" || true)
+          if [ -z "$GODOT_BIN" ]; then ls -la godottmp; exit 1; fi
+          chmod +x "godottmp/$GODOT_BIN"
+          mkdir -p ~/godot-${GODOT_VERSION}
+          mv "godottmp/$GODOT_BIN" ~/godot-${GODOT_VERSION}/godot
+          chmod +x ~/godot-${GODOT_VERSION}/godot
+
+      - name: Download Godot export templates
+        run: |
+          wget -q "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_export_templates.tpz" -O templates.tpz
+          mkdir -p "$HOME/.local/share/godot/templates/${GODOT_VERSION}"
+          unzip -q templates.tpz -d "$HOME/.local/share/godot/templates/${GODOT_VERSION}"
+
+      - name: Export HTML build
+        run: |
+          ~/godot-${{ env.GODOT_VERSION }}/godot --headless --path . --export-release "html" ./build/html/index.html
+
+      - name: Export Windows build
+        run: |
+          ~/godot-${{ env.GODOT_VERSION }}/godot --headless --path . --export-release "windows" ./build/windows/nautilus.exe
       - name: List files
         run: tree
       - name: Fail if commit message contains 'wip'
