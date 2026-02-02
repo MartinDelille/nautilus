@@ -61,21 +61,21 @@ jobs:
         if: steps.cache-godot.outputs.cache-hit != 'true'
         run: |
           wget -q "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip" -O godot.zip
-          unzip -q godot.zip -d .
-          ls -l
+          unzip -q godot.zip -d $HOME
+          ls -l $HOME
 
       - name: Download Godot export templates
         run: |
           wget -q "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_export_templates.tpz" -O templates.tpz
           mkdir -p "$HOME/.local/share/godot/templates/${GODOT_VERSION}"
           unzip -q templates.tpz -d "$HOME/.local/share/godot/templates/${GODOT_VERSION}"
-          ls -l
+          ls -l $HOME
 
       - name: Export HTML build
         run: |
-          ls -l
+          ls -l $HOME
           mkdir -p ./build/html
-          Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64 --headless --path . --export-release "html" ./build/html/index.html
+          $HOME/Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64 --headless --path . --export-release "html" ./build/html/index.html
 
       - name: Export Windows build
         run: |
