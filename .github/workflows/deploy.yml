@@ -40,7 +40,7 @@ jobs:
         id: cache-godot
         uses: actions/cache@v5
         with:
-          path: Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64
+          path: $HOME/Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64
           key: godot-${{ env.GODOT_VERSION }}-cache
 
       - name: Install Blender
