@@ -31,16 +31,16 @@ jobs:
 
       - name: Cache Blender
         id: cache-blender
-        uses: actions/cache@v3
+        uses: actions/cache@v5
         with:
           path: $HOME/blender-${{ env.BLENDER_VERSION }}
           key: blender-${{ env.BLENDER_VERSION }}-cache
 
       - name: Cache Godot
         id: cache-godot
-        uses: actions/cache@v3
+        uses: actions/cache@v5
         with:
-          path: $HOME/godot-${{ env.GODOT_VERSION }}
+          path: Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64
           key: godot-${{ env.GODOT_VERSION }}-cache
 
       - name: Install Blender
@@ -61,13 +61,7 @@ jobs:
         if: steps.cache-godot.outputs.cache-hit != 'true'
         run: |
           wget -q "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip" -O godot.zip
-          unzip -q godot.zip -d godottmp
-          GODOT_BIN=$(ls godottmp | grep -E "Godot_v.*linux.x86_64$" || true)
-          if [ -z "$GODOT_BIN" ]; then ls -la godottmp; exit 1; fi
-          chmod +x "godottmp/$GODOT_BIN"
-          mkdir -p ~/godot-${GODOT_VERSION}
-          mv "godottmp/$GODOT_BIN" ~/godot-${GODOT_VERSION}/godot
-          chmod +x ~/godot-${GODOT_VERSION}/godot
+          unzip -q godot.zip -d .
 
       - name: Download Godot export templates
         run: |
@@ -77,11 +71,13 @@ jobs:
 
       - name: Export HTML build
         run: |
-          ~/godot-${{ env.GODOT_VERSION }}/godot --headless --path . --export-release "html" ./build/html/index.html
+          mkdir -p ./build/html
+          Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64 --headless --path . --export-release "html" ./build/html/index.html
 
       - name: Export Windows build
         run: |
-          ~/godot-${{ env.GODOT_VERSION }}/godot --headless --path . --export-release "windows" ./build/windows/nautilus.exe
+          mkdir -p ./build/windows
+          Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64 --headless --path . --export-release "windows" ./build/windows/nautilus.exe
       - name: List files
         run: tree
       - name: Fail if commit message contains 'wip'
