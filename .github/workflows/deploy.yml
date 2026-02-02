@@ -73,18 +73,18 @@ jobs:
 
       - name: Import Godot project
         run: |
-          $HOME/Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64 --headless --import
+          $HOME/Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64 project.godot --headless --import
 
       - name: Export HTML build
         run: |
           ls -l $HOME
           mkdir -p ./build/html
-          $HOME/Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64 --headless --path . --export-release "html" ./build/html/index.html
+          $HOME/Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64 project.godot --headless --path . --export-release "html" ./build/html/index.html
 
       - name: Export Windows build
         run: |
           mkdir -p ./build/windows
-          Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64 --headless --path . --export-release "windows" ./build/windows/nautilus.exe
+          Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64 project.godot --headless --path . --export-release "windows" ./build/windows/nautilus.exe
       - name: List files
         run: tree
       - name: Fail if commit message contains 'wip'
