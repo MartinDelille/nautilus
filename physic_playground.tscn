@@ -1,0 +1,75 @@
+[gd_scene format=3 uid="uid://cscyw4oum1p3o"]
+
+[ext_resource type="Shader" uid="uid://im4posqfkg2r" path="res://physic_playground.gdshader" id="1_3mo56"]
+[ext_resource type="Script" uid="uid://bcvfpq4y8niyh" path="res://rigid_body_3d.gd" id="2_ycxvk"]
+[ext_resource type="Script" uid="uid://dyo57qdqevo5i" path="res://camera_pivot.gd" id="3_ycxvk"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vwwnc"]
+render_priority = 0
+shader = ExtResource("1_3mo56")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_633x7"]
+material = SubResource("ShaderMaterial_vwwnc")
+size = Vector2(30, 30)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1ub3e"]
+size = Vector3(2, 0.5, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_63tnn"]
+albedo_color = Color(0.14509805, 0.38039216, 1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_2nil7"]
+material = SubResource("StandardMaterial3D_63tnn")
+size = Vector3(2, 0.5, 1)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_ycxvk"]
+height = 1.0
+radius = 0.2
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_vwwnc"]
+top_radius = 0.1
+bottom_radius = 0.1
+height = 1.0
+
+[node name="Node3D" type="Node3D" unique_id=1066279330]
+
+[node name="Plan" type="MeshInstance3D" parent="." unique_id=1739148838]
+mesh = SubResource("PlaneMesh_633x7")
+
+[node name="boat" type="RigidBody3D" parent="." unique_id=1109053854]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.68834794, 0)
+mass = 100.0
+script = ExtResource("2_ycxvk")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="boat" unique_id=1197433461]
+shape = SubResource("BoxShape3D_1ub3e")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="boat" unique_id=647094125]
+mesh = SubResource("BoxMesh_2nil7")
+
+[node name="boom" type="RigidBody3D" parent="boat" unique_id=300080230]
+transform = Transform3D(-0.006771795, 0.99997705, 0, -0.99997705, -0.006771795, 0, 0, 0, 1, 0.5089237, 0.95689416, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="boat/boom" unique_id=222066037]
+shape = SubResource("CylinderShape3D_ycxvk")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="boat/boom" unique_id=1491467920]
+mesh = SubResource("CylinderMesh_vwwnc")
+
+[node name="HingeJoint3D" type="HingeJoint3D" parent="boat" unique_id=2041911795]
+transform = Transform3D(1, 0, 0, 0, 0.021448473, 0.9997699, 0, -0.9997699, 0.021448473, 0, 0.7222369, 0)
+node_a = NodePath("..")
+node_b = NodePath("../boom")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1640591162]
+transform = Transform3D(0.9611365, 0.0674706, -0.26770192, 0, 0.96967614, 0.24439359, 0.27607355, -0.2348956, 0.93199116, -3.087434, 0.6968614, 1.5260195)
+
+[node name="Yaw" type="Node3D" parent="." unique_id=1136663350]
+transform = Transform3D(0.809017, 0, 0.58778524, 0, 1, 0, -0.58778524, 0, 0.809017, 0, 1.19, 0)
+script = ExtResource("3_ycxvk")
+
+[node name="Pitch" type="Node3D" parent="Yaw" unique_id=2124759898]
+transform = Transform3D(1, 0, 0, 0, 0.7965299, 0.6045991, 0, -0.6045991, 0.7965299, 0, 0, 0)
+
+[node name="Camera3D" type="Camera3D" parent="Yaw/Pitch" unique_id=451621437]
+transform = Transform3D(1, 0, 0, 0, 0.91439533, 0.4048224, 0, -0.4048224, 0.91439533, 0, 0, 3.79)

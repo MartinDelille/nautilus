@@ -16,7 +16,14 @@ extends RigidBody3D
 var submerged := false
 var probes = []
 var barre_bone_index := 0
+<<<<<<< Updated upstream
+var sheet_limit: float = 60.0
+||||||| Stash base
+var sheet_limit: float = 60.0
+var debug = OS.is_debug_build()
+=======
 var sheet_limit: float = 10.0
+>>>>>>> Stashed changes
 
 @onready var barre_skeleton: Skeleton3D = $BoatModel/ArmatureBarre/Skeleton3D
 @onready var wind: Node3D = $"../Wind"
@@ -25,7 +32,70 @@ var sheet_limit: float = 10.0
 @onready var boom: RigidBody3D = $Boom
 @onready var hinge: HingeJoint3D = $HingeJoint3D
 
+<<<<<<< Updated upstream
+
+func _display_vector(
+	v: Vector3, where := Vector3.ZERO, color := Color(1., 1., 1.), target: Node3D = null
+):
+	var p = position
+	if target != null:
+		p = target.position
+	DebugDraw3D.draw_arrow(p + where, p + where + v * 0.2, color, 0.1)
+
+
+func _display_quaternion(q: Quaternion, where := Vector3.ZERO, color := Color(1., 1., 0.)):
+	var v := Vector3(q.x, q.y, q.z) * q.get_angle() * 100
+	_display_vector(v, where, color)
+
+
+func _apply_and_display_force(
+	force: Vector3,
+	where := Vector3.ZERO,
+	color := Color(1., 0., 1.),
+	display_vector := true,
+	target: Node3D = null
+):
+	if target == null:
+		target = self
+	else:
+		where += target.global_position
+	target.apply_force(force, where)
+	if display_vector:
+		_display_vector(force, where, color, target)
+||||||| Stash base
+
+func _display_vector(
+	v: Vector3, where := Vector3.ZERO, color := Color(1., 1., 1.), target: Node3D = null
+):
+	if debug:
+		var p = position
+		if target != null:
+			p = target.position
+		DebugDraw3D.draw_arrow(p + where, p + where + v * 0.2, color, 0.1)
+
+
+func _display_quaternion(q: Quaternion, where := Vector3.ZERO, color := Color(1., 1., 0.)):
+	var v := Vector3(q.x, q.y, q.z) * q.get_angle() * 100
+	_display_vector(v, where, color)
+
+
+func _apply_and_display_force(
+	force: Vector3,
+	where := Vector3.ZERO,
+	color := Color(1., 0., 1.),
+	display_vector := true,
+	target: Node3D = null
+):
+	if target == null:
+		target = self
+	else:
+		where += target.global_position
+	target.apply_force(force, where)
+	if display_vector:
+		_display_vector(force, where, color, target)
+=======
 const ForceUtils = preload("res://force_utils.gd")
+>>>>>>> Stashed changes
 
 
 func _ready() -> void:
@@ -44,12 +114,30 @@ func _ready() -> void:
 	probes[3].transform.origin = Vector3(-shift_x, shift_y, -shift_z)
 
 	barre_bone_index = barre_skeleton.find_bone("BarreBone")
+<<<<<<< Updated upstream
 	DebugDraw2D.config.text_default_size = 40
+||||||| Stash base
+	if debug:
+		DebugDraw2D.config.text_default_size = 40
+=======
+	#if debug:
+		#DebugDraw2D.config.text_default_size = 40
+>>>>>>> Stashed changes
 
 
 func _physics_process(_delta: float) -> void:
+<<<<<<< Updated upstream
 	DebugDraw2D.set_text("FPS:", Engine.get_frames_per_second(), 0)
 	DebugDraw2D.set_text("Rotation:", "%6.1f" % (rotation.y * 180 / PI))
+||||||| Stash base
+	if debug:
+		DebugDraw2D.set_text("FPS:", Engine.get_frames_per_second(), 0)
+		DebugDraw2D.set_text("Rotation:", "%6.1f" % (rotation.y * 180 / PI))
+=======
+	#if debug:
+		#DebugDraw2D.set_text("FPS:", Engine.get_frames_per_second(), 0)
+		#DebugDraw2D.set_text("Rotation:", "%6.1f" % (rotation.y * 180 / PI))
+>>>>>>> Stashed changes
 
 	barre_rotation += Input.get_axis("turn_right", "turn_left") * barre_rotational_speed
 	barre_rotation = clamp(barre_rotation, -PI / 2, PI / 2)
@@ -76,8 +164,7 @@ func _physics_process(_delta: float) -> void:
 	)
 	boom_force_position = -boom.global_transform.basis.x * boom_length
 	(
-		ForceUtils
-		. _apply_and_display_force(
+		ForceUtils._apply_and_display_force(
 			boom,
 			wind.wind_vector * 5,
 			boom_force_position,

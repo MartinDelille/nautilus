@@ -116,4 +116,11 @@ void fragment() {
 	ROUGHNESS = roughness;
 	NORMAL_MAP = normal_blend;
 	ALPHA = mix(0.6, 0.95, depth);
+
+	vec2 test=fract(world_pos.xz/4.)*2.;
+	if((test.x<0.1)|| (test.y<0.1)){
+	ALBEDO = vec3(1., 0., 0.);
+	}else{
+	ALBEDO = vec3(1., 1., 1.);
+	}
 }
