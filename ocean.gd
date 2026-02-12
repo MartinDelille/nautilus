@@ -6,7 +6,7 @@ const TILE_INDICES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 
 var OceanTile = preload("res://water_scene.tscn")
 var spawn_point = preload("res://grid_spawn_info.tres")
-var water_material = load("res://water_material.tres").duplicate()
+var water_material = load("res://water_material.tres")  #.duplicate()
 var tiles = {}
 var time: float
 
@@ -46,6 +46,7 @@ func create_ocean_tiles():
 
 
 func _ready() -> void:
+	water_material.set_shader_parameter("wave_time", time)
 	create_ocean_tiles()
 
 
@@ -79,6 +80,7 @@ func gerstner_wave_height(p: Vector2, angle: float, stepness: float, wavelength:
 
 
 func get_height(world_position: Vector3) -> float:
+	return 0.
 	var p = Vector2(world_position.x, world_position.z)
 	var height = 0
 	height += gerstner_wave_height(p, wave_angle1, wave_stepness1, wave_length1)
