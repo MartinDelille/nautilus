@@ -23,9 +23,11 @@ static func display_vector(
 		)
 
 
-static func display_quaternion(q: Quaternion, where := Vector3.ZERO, color := Color(1., 1., 0.)):
+static func display_quaternion(
+	target: Node3D, q: Quaternion, where := Vector3.ZERO, color := Color(1., 1., 0.)
+):
 	var v := Vector3(q.x, q.y, q.z) * q.get_angle() * 100
-	display_vector(v, where, color)
+	display_vector(target, v, where, color)
 
 
 static func apply_and_display_force(
