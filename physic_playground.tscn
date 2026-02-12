@@ -12,11 +12,15 @@ shader = ExtResource("1_3mo56")
 material = SubResource("ShaderMaterial_vwwnc")
 size = Vector2(30, 30)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_ycxvk"]
+size = Vector3(20, 1, 20)
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_1ub3e"]
 size = Vector3(4, 0.5, 2)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_63tnn"]
-albedo_color = Color(0.14509805, 0.38039216, 1, 1)
+transparency = 1
+albedo_color = Color(0.14509805, 0.38039216, 1, 0.73333335)
 
 [sub_resource type="BoxMesh" id="BoxMesh_2nil7"]
 material = SubResource("StandardMaterial3D_63tnn")
@@ -33,8 +37,16 @@ height = 1.0
 
 [node name="Node3D" type="Node3D" unique_id=1066279330]
 
-[node name="Plan" type="MeshInstance3D" parent="." unique_id=1739148838]
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=1742953615]
+collision_layer = 2
+
+[node name="Plan" type="MeshInstance3D" parent="StaticBody3D" unique_id=1739148838]
 mesh = SubResource("PlaneMesh_633x7")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=265807334]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.4385171, 0)
+shape = SubResource("BoxShape3D_ycxvk")
 
 [node name="boat" type="RigidBody3D" parent="." unique_id=1109053854]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.68834794, 0)
@@ -48,13 +60,16 @@ shape = SubResource("BoxShape3D_1ub3e")
 mesh = SubResource("BoxMesh_2nil7")
 
 [node name="boom" type="RigidBody3D" parent="boat" unique_id=300080230]
-transform = Transform3D(-0.006771795, 0.99997705, 0, -0.99997705, -0.006771795, 0, 0, 0, 1, 0.5089237, 0.95689416, 0)
+transform = Transform3D(-0.006771795, 0.99997705, 0, -0.99997705, -0.006771795, 0, 0, 0, 1, 0, 0.957, 0)
 mass = 0.021
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="boat/boom" unique_id=222066037]
+transform = Transform3D(1.0000001, 0, 0, 0, 1.0000001, 0, 0, 0, 1, -0.003473401, 0.51291156, 0)
 shape = SubResource("CylinderShape3D_ycxvk")
+debug_color = Color(0.41181383, 0.044363193, 0.31755337, 0.41960785)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="boat/boom" unique_id=1491467920]
+transform = Transform3D(1.0000001, 0, 0, 0, 1.0000001, 0, 0, 0, 1, -0.003357768, 0.4958354, 0)
 mesh = SubResource("CylinderMesh_vwwnc")
 
 [node name="HingeJoint3D" type="HingeJoint3D" parent="boat" unique_id=2041911795]

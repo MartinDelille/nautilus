@@ -23,7 +23,7 @@ var sheet_limit: float = 10.0
 @onready var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 @onready var water = $"../Ocean"
 @onready var boom: RigidBody3D = $Boom
-@onready var hinge: HingeJoint3D = $HingeJoint3D
+@onready var hinge: HingeJoint3D = $Boom/HingeJoint3D 
 
 const ForceUtils = preload("res://force_utils.gd")
 
@@ -45,6 +45,7 @@ func _ready() -> void:
 
 	barre_bone_index = barre_skeleton.find_bone("BarreBone")
 	DebugDraw2D.config.text_default_size = 40
+	ForceUtils.set_font_size(200)
 
 
 func _physics_process(_delta: float) -> void:
@@ -75,17 +76,8 @@ func _physics_process(_delta: float) -> void:
 		boom.global_transform.origin - boom.global_transform.basis.x * boom_length
 	)
 	boom_force_position = -boom.global_transform.basis.x * boom_length
-	(
-		ForceUtils
-		. _apply_and_display_force(
-			boom,
-			wind.wind_vector * 5,
-			boom_force_position,
-			Color(1, 1, 0),
-			"boom force",
-			true,
-		)
-	)
+	
+	ForceUtils._apply_and_display_force( boom, wind.wind_vector * 5, boom_force_position, Color(1, 1, 0), "boom force", true )
 
 	var sail_quaternion = boom.global_transform.basis.get_rotation_quaternion()
 	var sail_normal = sail_quaternion * transform.basis.z
@@ -93,13 +85,9 @@ func _physics_process(_delta: float) -> void:
 
 	var effective_wind_velocity = wind.wind_vector.dot(sail_normal)
 	var sail_scale = 16
-	ForceUtils._display_vector(
-		self, sail_scale * sail_normal, transform.basis.y * 4, Color(0, 1, 0)
-	)
-	ForceUtils._display_vector(
-		self, sail_scale * sail_direction, transform.basis.y * 4, Color(1, 0, 0)
-	)
-	ForceUtils._display_vector(self, 8 * wind.wind_vector, transform.basis.y * 8, Color(0, 1, 1))
+	#ForceUtils._display_vector( self, sail_scale * sail_normal, transform.basis.y * 4, Color(0, 1, 0) )
+	#ForceUtils._display_vector( self, sail_scale * sail_direction, transform.basis.y * 4, Color(1, 0, 0) )
+	#ForceUtils._display_vector(self, 8 * wind.wind_vector, transform.basis.y * 8, Color(0, 1, 1))
 
 	# Drag and lift effects
 	var wind_effect = (
@@ -116,15 +104,10 @@ func _physics_process(_delta: float) -> void:
 		wind_force += sail_normal * wind_effect
 
 	var keel_lift = -wind_force.project(transform.basis.z)
-	ForceUtils._apply_and_display_force(
-		boom, wind_force, boom_force_position, Color(0, 0, 1.), "wind force", true
-	)
-	ForceUtils._apply_and_display_force(
-		boom, keel_lift, Vector3.ZERO, Color(.9, .5, .1), "keel lift", true
-	)
-	ForceUtils._apply_and_display_force(
-		self, Vector3.DOWN * keel_weight, -10 * transform.basis.y, Color(.5, .1, .2), "keel weight"
-	)
+	#ForceUtils._apply_and_display_force( boom, wind_force, boom_force_position, Color(0, 0, 1.), "wind force", .1 )
+	ForceUtils._display_vector( self, wind_force, Vector3.ZERO, Color(0, 0, 1.), "wind vector", .1 )
+	#ForceUtils._apply_and_display_force( boom, keel_lift, Vector3.ZERO, Color(.9, .5, .1), "keel lift", .1 )
+	ForceUtils._apply_and_display_force( self, Vector3.DOWN * keel_weight, -10 * transform.basis.y, Color(.5, .1, .2), "keel weight" )
 
 	submerged = false
 	for p in probes:
@@ -136,7 +119,7 @@ func _physics_process(_delta: float) -> void:
 				p.global_position - global_position,
 				Color(1., 0, 1),
 				"probe",
-				true
+				0.
 			)
 			submerged = true
 

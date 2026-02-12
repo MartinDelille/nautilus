@@ -1,18 +1,22 @@
 static var debug = OS.is_debug_build()
 
+static var font_size = 18
 
+static func set_font_size(size):
+	font_size=size
+	
 static func _display_vector(
 	target: Node3D,
 	v: Vector3,
 	where := Vector3.ZERO,
 	color := Color(1., 1., 1.),
 	text: String = "",
+	factor:=1.
 ):
-	if debug:
-		var p = target.position
-		DebugDraw3D.draw_arrow(p + where, p + where + v * 0.2, color, 0.1)
-		DebugDraw3D.draw_text(p + where + v * 0.1, text, 18, color)
-
+	if debug and factor>0.:
+		var p = target.global_position
+		DebugDraw3D.draw_arrow(p + where, p + where + v*factor , color, 0.1)
+		DebugDraw3D.draw_text(p + where + v*factor * 0.5, "%s x%.2f" % [text, factor], font_size, color)
 
 static func _display_quaternion(q: Quaternion, where := Vector3.ZERO, color := Color(1., 1., 0.)):
 	var v := Vector3(q.x, q.y, q.z) * q.get_angle() * 100
@@ -25,8 +29,7 @@ static func _apply_and_display_force(
 	where := Vector3.ZERO,
 	color := Color(1., 0., 1.),
 	text := "",
-	display_vector := true,
+	factor := 1.,
 ):
-	target.apply_force(force, target.global_position + where)
-	if display_vector:
-		_display_vector(target, force*0.03, target.global_position + where, color, text)
+	target.apply_force(force,  where)
+	_display_vector(target, force ,  where, color, text, factor)
