@@ -28,14 +28,17 @@ func _physics_process(delta: float) -> void:
 	#prints(position.y)
 	#var f = Vector3(0., -position.y * 200., 0.)
 	#ForceUtils._apply_and_display_force(self, f)
+	var i=0
 	for p in probes:
+		i+=1
 		var depth = -p.global_position.y + 0.5
 		if depth > 0:
+			ForceUtils._display_vector(self,p.global_position, Vector3.ZERO, Color(1,0,0) )
 			ForceUtils._apply_and_display_force(
 				self,
 				Vector3.UP * floating_force * gravity * pow(depth, 2),
-				p.global_position - global_position,
+				p.global_position ,#- global_position,
 				Color(1., 0, 1),
-				"probe",
+				"probe " + i,
 				true
 			)
