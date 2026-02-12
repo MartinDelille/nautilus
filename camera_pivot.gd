@@ -7,7 +7,6 @@ extends Node3D
 
 func _ready() -> void:
 	prints(yaw, pitch)
-	pass
 
 
 func _input(event: InputEvent) -> void:
