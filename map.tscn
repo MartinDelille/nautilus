@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://j2ahw1ou4mj7" path="res://floating.tscn" id="4_wisn2"]
 [ext_resource type="PackedScene" uid="uid://df7tqccjhofm7" path="res://boat.blend" id="5_5xxyr"]
 [ext_resource type="Script" uid="uid://c101trx2ups26" path="res://wind.gd" id="6_j8e2u"]
+[ext_resource type="PackedScene" uid="uid://bq1de6cc73x33" path="res://island/island.blend" id="10_0t07s"]
 [ext_resource type="PackedScene" uid="uid://brsiufh402kei" path="res://buoy.blend" id="10_oysan"]
 [ext_resource type="Script" uid="uid://cp0havsjr4u5d" path="res://buoy.gd" id="10_sb2pt"]
 [ext_resource type="Script" uid="uid://b3kdkxrts504" path="res://ocean.gd" id="11_sb2pt"]
@@ -77,6 +78,8 @@ height = 5.373
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_sb2pt"]
 height = 4.804
 
+[sub_resource type="Theme" id="Theme_oysan"]
+
 [node name="Map" type="Node3D" unique_id=1275466197]
 script = ExtResource("1_5selp")
 
@@ -92,15 +95,6 @@ keel_weight = 50
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="FloatingBoat" unique_id=1789612543]
 shape = SubResource("BoxShape3D_xm1ix")
-
-[node name="HingeJoint3D" type="HingeJoint3D" parent="FloatingBoat" unique_id=2001412733]
-transform = Transform3D(-4.371139e-08, -1, -4.371139e-08, 0, -4.371139e-08, 1, -1, 4.371139e-08, 1.9106855e-15, 0, 2.4115016, 0)
-node_a = NodePath("../Boom")
-node_b = NodePath("..")
-angular_limit/enable = true
-angular_limit/upper = 1.0471976
-angular_limit/lower = -1.0471976
-angular_limit/softness = 4.13
 
 [node name="BoatModel" parent="FloatingBoat" unique_id=603361797 instance=ExtResource("5_5xxyr")]
 
@@ -190,14 +184,14 @@ attachments/25/spatial_attachment_path = NodePath("../Boom")
 attachments/25/offset = Vector3(-0.377728, 0.06326628, -0.0071499995)
 
 [node name="Yaw" type="Node3D" parent="FloatingBoat" unique_id=1940015646]
-transform = Transform3D(-0.979575, 0, -0.201078, 0, 1, 0, 0.201078, 0, -0.979575, 0, 0, 0)
+transform = Transform3D(-0.16332597, 0, -0.98657185, 0, 1, 0, 0.98657185, 0, -0.16332597, 0, 0, 0)
 rotation_order = 0
 top_level = true
 script = ExtResource("3_04a7x")
 
 [node name="Pitch" type="Node3D" parent="FloatingBoat/Yaw" unique_id=2085138397]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 0.953717, 0.300706, 0, -0.300706, 0.953717, 0, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 0.4863354, 0.8737724, 0, -0.8737724, 0.4863354, 0, 0, 0)
 
 [node name="Camera3D" type="Camera3D" parent="FloatingBoat/Yaw/Pitch" unique_id=1370402517]
 transform = Transform3D(1, 8.9407e-08, 5.96046e-08, 0, 1, 5.96046e-08, -2.98023e-08, -5.96046e-08, 1, 0, 0, 39.36)
@@ -214,6 +208,15 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.342772, 2.1266088, 0)
 collision_layer = 8
 collision_mask = 0
 mass = 5.0
+
+[node name="HingeJoint3D" type="HingeJoint3D" parent="FloatingBoat/Boom" unique_id=2001412733]
+transform = Transform3D(-4.371139e-08, -1, -4.371139e-08, 0, -4.371139e-08, 1, -1, 4.371139e-08, 1.9106855e-15, 0.342772, 0.2848928, 0)
+node_a = NodePath("..")
+node_b = NodePath("../..")
+angular_limit/enable = true
+angular_limit/upper = 1.0471976
+angular_limit/lower = -1.0471976
+angular_limit/softness = 4.13
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="FloatingBoat/Boom" unique_id=989903339]
 transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -2.51, 0, 0)
@@ -251,3 +254,25 @@ shape = SubResource("CylinderShape3D_sb2pt")
 
 [node name="Anchor" type="Marker3D" parent="Buoy" unique_id=1970212296]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -31.1681, 0)
+
+[node name="Island" parent="." unique_id=1300191643 instance=ExtResource("10_0t07s")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 157.19684, 0, 253.47583)
+
+[node name="Control" type="Control" parent="." unique_id=1399743571]
+layout_mode = 3
+anchor_right = 0.113000005
+anchor_bottom = 0.081
+offset_left = 533.0
+offset_top = 31.0
+offset_right = 508.0
+offset_bottom = 61.0
+
+[node name="CheckBox" type="CheckBox" parent="Control" unique_id=8835820]
+layout_mode = 0
+offset_left = 9.0
+offset_top = 15.0
+offset_right = 125.0
+offset_bottom = 46.0
+theme = SubResource("Theme_oysan")
+button_pressed = true
+text = "Apply force"

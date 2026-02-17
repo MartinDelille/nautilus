@@ -16,7 +16,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
 config/name="nautilus"
 run/main_scene="res://map.tscn"
-config/features=PackedStringArray("4.6", "Mobile")
+config/features=PackedStringArray("4.7", "Mobile")
 config/icon="res://icon.svg"
 
 [debug_draw_3d]
@@ -30,7 +30,7 @@ window/size/viewport_height=1000
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/godot-vim/plugin.cfg")
+enabled=PackedStringArray("editor://addons/godot-vim/plugin.cfg")
 
 [input]
 
