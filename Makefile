@@ -7,9 +7,9 @@ e: check
 	$$GODOT_PROGRAM project.godot
 
 r: check
-	$$GODOT_PROGRAM --path .&
-	sleep 2
-	osascript -e 'tell application "Ghostty" to activate'
+	$$GODOT_PROGRAM --path .
+	# sleep 2
+	# osascript -e 'tell application "Ghostty" to activate'
 
 
 l:
