@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://66vj0chxnpp3"]
+
+[ext_resource type="Theme" uid="uid://j4hxytdb4mcv" path="res://ui_theme.tres" id="1_fyqef"]
+
+[node name="Control" type="Control" unique_id=488820694]
+layout_mode = 3
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 40.0
+grow_horizontal = 0
+theme = ExtResource("1_fyqef")
+
+[node name="CheckBox" type="CheckBox" parent="." unique_id=1699866083]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -119.0
+offset_bottom = 31.0
+grow_horizontal = 0
+text = "Apply Force"

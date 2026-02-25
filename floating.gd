@@ -29,7 +29,7 @@ var _apply_force := true
 @onready var water = $"../Ocean"
 @onready var boom: RigidBody3D = $Boom
 @onready var hinge: HingeJoint3D = $Boom/HingeJoint3D
-@onready var check: CheckBox = $"../Control/CheckBox"
+@onready var check: CheckBox = $"../Control/ForceCheckBox"
 
 
 func _ready() -> void:

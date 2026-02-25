@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://bq1de6cc73x33" path="res://island/island.blend" id="10_0t07s"]
 [ext_resource type="PackedScene" uid="uid://brsiufh402kei" path="res://buoy.blend" id="10_oysan"]
 [ext_resource type="Script" uid="uid://cp0havsjr4u5d" path="res://buoy.gd" id="10_sb2pt"]
+[ext_resource type="PackedScene" uid="uid://66vj0chxnpp3" path="res://ui.tscn" id="11_0t07s"]
 [ext_resource type="Script" uid="uid://b3kdkxrts504" path="res://ocean.gd" id="11_sb2pt"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_gqbix"]
@@ -78,7 +79,37 @@ height = 5.373
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_sb2pt"]
 height = 4.804
 
-[sub_resource type="Theme" id="Theme_oysan"]
+[sub_resource type="Theme" id="Theme_6qsgm"]
+resource_local_to_scene = true
+default_font_size = 55
+CheckBox/colors/checkbox_checked_color = Color(0, 0, 0, 1)
+CheckBox/colors/checkbox_unchecked_color = Color(0, 0, 0, 1)
+CheckBox/colors/font_color = Color(0, 0, 0, 1)
+CheckBox/colors/font_disabled_color = Color(0, 0, 0, 1)
+CheckBox/colors/font_focus_color = Color(0, 0, 0, 1)
+CheckBox/colors/font_hover_color = Color(0, 0, 0, 1)
+CheckBox/colors/font_hover_pressed_color = Color(0, 0, 0, 1)
+CheckBox/colors/font_outline_color = Color(0, 0, 0, 1)
+CheckBox/colors/font_pressed_color = Color(0, 0, 0, 1)
+CheckBox/constants/check_v_offset = 0
+CheckBox/constants/h_separation = 0
+CheckBox/constants/outline_size = 0
+CheckBox/font_sizes/font_size = 22
+CheckBox/fonts/font = null
+CheckBox/icons/checked = null
+CheckBox/icons/checked_disabled = null
+CheckBox/icons/radio_checked = null
+CheckBox/icons/radio_checked_disabled = null
+CheckBox/icons/radio_unchecked = null
+CheckBox/icons/radio_unchecked_disabled = null
+CheckBox/icons/unchecked = null
+CheckBox/icons/unchecked_disabled = null
+CheckBox/styles/disabled = null
+CheckBox/styles/focus = null
+CheckBox/styles/hover = null
+CheckBox/styles/hover_pressed = null
+CheckBox/styles/normal = null
+CheckBox/styles/pressed = null
 
 [node name="Map" type="Node3D" unique_id=1275466197]
 script = ExtResource("1_5selp")
@@ -258,21 +289,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -31.1681, 0)
 [node name="Island" parent="." unique_id=1300191643 instance=ExtResource("10_0t07s")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 157.19684, 0, 253.47583)
 
-[node name="Control" type="Control" parent="." unique_id=1399743571]
-layout_mode = 3
-anchor_right = 0.113000005
-anchor_bottom = 0.081
-offset_left = 533.0
-offset_top = 31.0
-offset_right = 508.0
-offset_bottom = 61.0
-
-[node name="CheckBox" type="CheckBox" parent="Control" unique_id=8835820]
-layout_mode = 0
-offset_left = 9.0
-offset_top = 15.0
-offset_right = 125.0
-offset_bottom = 46.0
-theme = SubResource("Theme_oysan")
-button_pressed = true
-text = "Apply force"
+[node name="Control" parent="." unique_id=1196658088 instance=ExtResource("11_0t07s")]
+offset_left = -276.0
+offset_bottom = 251.0
+theme = SubResource("Theme_6qsgm")
