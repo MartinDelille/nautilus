@@ -1,0 +1,6 @@
+[gd_resource type="Theme" format=3 uid="uid://j4hxytdb4mcv"]
+
+[resource]
+resource_local_to_scene = true
+default_font_size = 85
+CheckBox/font_sizes/font_size = 26

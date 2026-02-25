@@ -1,8 +1,12 @@
 extends Node3D
 
 @onready var yaw: Node3D = $"."
-@onready var pitch: Node3D = %Pitch
+@onready var pitch: Node3D = $Pitch
 @onready var camera_3d: Camera3D = $Pitch/Camera3D
+
+
+func _ready() -> void:
+	prints(yaw, pitch)
 
 
 func _input(event: InputEvent) -> void:
