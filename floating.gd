@@ -80,6 +80,24 @@ func _ready() -> void:
 	DebugDraw2D.config.text_default_size = 40
 
 
+func _process(_delta: float) -> void:
+	var instant_rotation: float = (
+		Input.get_axis("move_backward", "move_forward") * boom_rotational_speed
+	)
+
+	sheet_limit += instant_rotation * 20
+	sheet_limit = clamp(sheet_limit, 10, 80)
+
+
+func _input(event: InputEvent) -> void:
+	if event is InputEventScreenDrag:
+		var drag_event: InputEventScreenDrag = event
+		var dir := drag_event.relative
+		print("drag: ", dir)
+		sheet_limit += dir.y * 0.1
+		barre_rotation += dir.x * 0.01
+
+
 func _physics_process(_delta: float) -> void:
 	DebugDraw2D.set_text("FPS:", Engine.get_frames_per_second(), 0)
 	DebugDraw2D.set_text("Rotation:", "%6.1f" % (rotation.y * 180 / PI))
@@ -92,12 +110,6 @@ func _physics_process(_delta: float) -> void:
 
 	apply_torque(Vector3(0, -barre_rotation * 100, 0))
 
-	var instant_rotation: float = (
-		Input.get_axis("move_backward", "move_forward") * boom_rotational_speed
-	)
-
-	sheet_limit += instant_rotation * 20
-	sheet_limit = clamp(sheet_limit, 10, 80)
 	hinge.set_param(HingeJoint3D.PARAM_LIMIT_LOWER, deg_to_rad(-sheet_limit))
 	hinge.set_param(HingeJoint3D.PARAM_LIMIT_UPPER, deg_to_rad(sheet_limit))
 
