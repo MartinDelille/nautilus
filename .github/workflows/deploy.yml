@@ -14,8 +14,8 @@ permissions:
   id-token: write
 
 env:
-  BLENDER_VERSION: 4.3.2
-  GODOT_VERSION: 4.5.1
+  BLENDER_VERSION: 5.0.1
+  GODOT_VERSION: 4.6.1
 
 jobs:
   build:
