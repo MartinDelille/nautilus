@@ -13,10 +13,6 @@ permissions:
   pages: write
   id-token: write
 
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
-
 env:
   BLENDER_VERSION: 4.3.2
   GODOT_VERSION: 4.5.1
