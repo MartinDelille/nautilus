@@ -5,3 +5,6 @@
 .envrc
 addons/
 export/
+uv.lock
+pyproject.toml
+.python-version

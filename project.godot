@@ -16,7 +16,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
 config/name="nautilus"
 run/main_scene="res://map.tscn"
-config/features=PackedStringArray("4.6", "Mobile")
+config/features=PackedStringArray("4.7", "Mobile")
 config/icon="res://icon.svg"
 
 [debug_draw_3d]
@@ -25,8 +25,10 @@ settings/addon_root_folder="res://addons/debug_draw_3d"
 
 [display]
 
-window/size/viewport_width=2000
-window/size/viewport_height=1000
+window/size/viewport_width=3000
+window/size/viewport_height=2000
+window/size/initial_position_type=3
+window/size/initial_position=Vector2i(-789, 0)
 
 [editor_plugins]
 
