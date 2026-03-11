@@ -3,6 +3,7 @@
 [ext_resource type="Shader" uid="uid://im4posqfkg2r" path="res://physic_playground.gdshader" id="1_3mo56"]
 [ext_resource type="Script" uid="uid://bcvfpq4y8niyh" path="res://rigid_body_3d.gd" id="2_ycxvk"]
 [ext_resource type="Script" uid="uid://dyo57qdqevo5i" path="res://camera_pivot.gd" id="3_ycxvk"]
+[ext_resource type="PackedScene" uid="uid://66vj0chxnpp3" path="res://ui.tscn" id="4_vwwnc"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_vwwnc"]
 render_priority = 0
@@ -89,3 +90,5 @@ transform = Transform3D(1, 0, 0, 0, 0.7965299, 0.6045991, 0, -0.6045991, 0.79652
 
 [node name="Camera3D" type="Camera3D" parent="Yaw/Pitch" unique_id=451621437]
 transform = Transform3D(1, 0, 0, 0, 0.91439533, 0.4048224, 0, -0.4048224, 0.91439533, 0, 0, 3.79)
+
+[node name="Control" parent="." unique_id=488820694 instance=ExtResource("4_vwwnc")]

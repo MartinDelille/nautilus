@@ -26,6 +26,7 @@ var sheet_limit: float = 10  #60.0
 @onready var water = $"../Ocean"
 @onready var boom: RigidBody3D = $Boom
 @onready var hinge: HingeJoint3D = $HingeJoint3D
+@onready var ui: Control = $"../Control"
 
 
 func _ready() -> void:
@@ -98,16 +99,21 @@ func _physics_process(_delta: float) -> void:
 	else:
 		wind_force += sail_normal * wind_effect
 
-	var keel_lift = -wind_force.project(transform.basis.z)
-	ForceUtils.apply_and_display_force(
-		self, wind_force, Vector3.ZERO, Color(0, 0, 1.), "wind force", .1
-	)
-	ForceUtils.apply_and_display_force(
-		self, keel_lift, Vector3.ZERO, Color(.9, .5, .1), "keel lift", .1
-	)
-	ForceUtils.apply_and_display_force(
-		self, Vector3.DOWN * keel_weight, -10 * transform.basis.y, Color(.5, .1, .2), "keel weight"
-	)
+	if ui.shall_apply_force:
+		var keel_lift = -wind_force.project(transform.basis.z)
+		ForceUtils.apply_and_display_force(
+			self, wind_force, Vector3.ZERO, Color(0, 0, 1.), "wind force", .1
+		)
+		ForceUtils.apply_and_display_force(
+			self, keel_lift, Vector3.ZERO, Color(.9, .5, .1), "keel lift", .1
+		)
+		ForceUtils.apply_and_display_force(
+			self,
+			Vector3.DOWN * keel_weight,
+			-10 * transform.basis.y,
+			Color(.5, .1, .2),
+			"keel weight"
+		)
 
 	submerged = false
 	for p in probes:
