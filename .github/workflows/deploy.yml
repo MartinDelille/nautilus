@@ -1,4 +1,4 @@
-name: Deploy Godot project to GitHub Pages and Itch.io
+name: Deploy Godot project
 
 on:
   push:
@@ -26,6 +26,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch all history so origin/main is available
 
       - name: Cache Blender
         id: cache-blender
@@ -67,13 +69,12 @@ jobs:
           cache: true
       - name: List files
         run: tree
-      - name: Fail if commit message contains 'wip'
+      - name: Fail if any commit message contains 'wip' since main
         run: |
-          if git log -1 --pretty=%B | grep -iq 'wip'; then
+          if git log --pretty=%B origin/main..HEAD | grep -iq 'wip'; then
             echo "Deployment blocked: commit message contains 'wip'."
             exit 1
           fi
-
       - name: Upload HTML artifact
         uses: actions/upload-artifact@v4
         with:
