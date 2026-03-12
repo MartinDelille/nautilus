@@ -2,7 +2,7 @@ extends RigidBody3D
 
 const ForceUtils = preload("res://force_utils.gd")
 
-@export var floating_force := 4.6
+@export var floating_force := 10.35
 @export var water_drag := 0.3
 @export var water_angular_drag := .7
 @export var longitudinal_speed := 20.
@@ -29,24 +29,19 @@ var sheet_limit: float = 60.0
 
 
 func _ready() -> void:
-	for i in range(9):
+	for i in range(4):
 		var probe = Marker3D.new()
 		probe.name = "Marker3D_%d" % i
 		add_child(probe)
 		probes.append(probe)
 	var size = $CollisionShape3D.shape.size
 	var shift_x = $CollisionShape3D.shape.size.x / 2
-	var shift_y = -$CollisionShape3D.shape.size.y / 2
+	var shift_y = -$CollisionShape3D.shape.size.y * 1.5
 	var shift_z = $CollisionShape3D.shape.size.z / 2
 	probes[0].transform.origin = Vector3(shift_x, shift_y, shift_z)
-	probes[1].transform.origin = Vector3(shift_x, shift_y, 0)
-	probes[2].transform.origin = Vector3(shift_x, shift_y, -shift_z)
-	probes[3].transform.origin = Vector3(0, shift_y, shift_z)
-	probes[4].transform.origin = Vector3(0, shift_y, 0)
-	probes[5].transform.origin = Vector3(0, shift_y, -shift_z)
-	probes[6].transform.origin = Vector3(-shift_x, shift_y, shift_z)
-	probes[7].transform.origin = Vector3(-shift_x, shift_y, 0)
-	probes[8].transform.origin = Vector3(-shift_x, shift_y, -shift_z)
+	probes[1].transform.origin = Vector3(shift_x, shift_y, -shift_z)
+	probes[2].transform.origin = Vector3(-shift_x, shift_y, shift_z)
+	probes[3].transform.origin = Vector3(-shift_x, shift_y, -shift_z)
 
 	barre_bone_index = barre_skeleton.find_bone("BarreBone")
 	ForceUtils.set_font_size(200)
