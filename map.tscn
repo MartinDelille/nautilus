@@ -94,15 +94,6 @@ keel_weight = 50
 [node name="CollisionShape3D" type="CollisionShape3D" parent="FloatingBoat" unique_id=1789612543]
 shape = SubResource("BoxShape3D_xm1ix")
 
-[node name="HingeJoint3D" type="HingeJoint3D" parent="FloatingBoat" unique_id=2001412733]
-transform = Transform3D(-4.371139e-08, -1, -4.371139e-08, 0, -4.371139e-08, 1, -1, 4.371139e-08, 1.9106855e-15, 0, 2.4115016, 0)
-node_a = NodePath("../Boom")
-node_b = NodePath("..")
-angular_limit/enable = true
-angular_limit/upper = 1.0471976
-angular_limit/lower = -1.0471976
-angular_limit/softness = 4.13
-
 [node name="BoatModel" parent="FloatingBoat" unique_id=603361797 instance=ExtResource("5_5xxyr")]
 
 [node name="Sail" type="SoftBody3D" parent="FloatingBoat" unique_id=1588096620]
@@ -215,6 +206,15 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.342772, 2.1266088, 0)
 collision_layer = 8
 collision_mask = 0
 mass = 5.0
+
+[node name="HingeJoint3D" type="HingeJoint3D" parent="FloatingBoat/Boom" unique_id=2001412733]
+transform = Transform3D(-4.371139e-08, -1, -4.371139e-08, 0, -4.371139e-08, 1, -1, 4.371139e-08, 1.9106855e-15, 0.342772, 0.2848928, 0)
+node_a = NodePath("..")
+node_b = NodePath("../..")
+angular_limit/enable = true
+angular_limit/upper = 1.0471976
+angular_limit/lower = -1.0471976
+angular_limit/softness = 4.13
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="FloatingBoat/Boom" unique_id=989903339]
 transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -2.51, 0, 0)

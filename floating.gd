@@ -25,7 +25,7 @@ var sheet_limit: float = 60.0
 @onready var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 @onready var water = $"../Ocean"
 @onready var boom: RigidBody3D = $Boom
-@onready var hinge: HingeJoint3D = $HingeJoint3D
+@onready var hinge: HingeJoint3D = $Boom/HingeJoint3D
 
 
 func _ready() -> void:
@@ -68,16 +68,6 @@ func _physics_process(_delta: float) -> void:
 	hinge.set_param(HingeJoint3D.PARAM_LIMIT_LOWER, deg_to_rad(-sheet_limit))
 	hinge.set_param(HingeJoint3D.PARAM_LIMIT_UPPER, deg_to_rad(sheet_limit))
 
-	var boom_length = 4  # Replace with actual length if available
-	var boom_force_position = (
-		boom.global_transform.origin - boom.global_transform.basis.x * boom_length
-	)
-	boom_force_position = -boom.global_transform.basis.x * boom_length
-	var boom_force = wind.wind_vector * 5
-	ForceUtils.apply_and_display_force(
-		boom, boom_force, boom_force_position, Color(1, 1, 0), "boom force", true
-	)
-
 	var sail_quaternion = boom.global_transform.basis.get_rotation_quaternion()
 	var sail_normal = sail_quaternion * transform.basis.z
 	var sail_direction = sail_quaternion * transform.basis.x
@@ -110,10 +100,10 @@ func _physics_process(_delta: float) -> void:
 
 	var keel_lift = -wind_force.project(transform.basis.z)
 	ForceUtils.apply_and_display_force(
-		boom, wind_force, boom_force_position, Color(1, 1, 0), "wind force", true
+		self, wind_force, Vector3.ZERO, Color(0, 0, 1.), "wind force", .1
 	)
 	ForceUtils.apply_and_display_force(
-		boom, keel_lift, Vector3.ZERO, Color(.9, .5, .1), "keel lift", .1
+		self, keel_lift, Vector3.ZERO, Color(.9, .5, .1), "keel lift", .1
 	)
 	ForceUtils.apply_and_display_force(
 		self, Vector3.DOWN * keel_weight, -10 * transform.basis.y, Color(.5, .1, .2), "keel weight"
