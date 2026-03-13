@@ -90,7 +90,7 @@ func _physics_process(_delta: float) -> void:
 		barre_bone_index, Quaternion(Vector3(0, 1, 0), barre_rotation)
 	)
 
-	apply_torque(Vector3(0, -barre_rotation * 100, 0))
+	apply_torque(Vector3(0, -barre_rotation * 5000, 0))
 
 	var instant_rotation: float = (
 		Input.get_axis("move_backward", "move_forward") * boom_rotational_speed
