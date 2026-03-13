@@ -8,24 +8,24 @@ const ForceUtils = preload("res://force_utils.gd")
 @export var longitudinal_speed := 20.
 @export var barre_rotation := 0.
 @export var barre_rotational_speed := 0.01
-@export var boom_rotational_speed := 0.03
+@export var bome_rotation := 0.
+@export var bome_rotational_speed := 0.03
 @export var air_density := 1.225
 @export var drag_coefficient := 1.0
 @export var lift_coefficient := 0.5
-@export var sail_area := 30
-@export var keel_weight := 100
+@export var sail_area := 20
+@export var keel_weight := 10
 
 var submerged := false
 var probes = []
+var bome_bone_index := 0
 var barre_bone_index := 0
-var sheet_limit: float = 60.0
 
+@onready var bome_skeleton: Skeleton3D = $BoatModel/ArmatureBome/Skeleton3D
 @onready var barre_skeleton: Skeleton3D = $BoatModel/ArmatureBarre/Skeleton3D
 @onready var wind: Node3D = $"../Wind"
 @onready var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 @onready var water = $"../Ocean"
-@onready var boom: RigidBody3D = $Boom
-@onready var hinge: HingeJoint3D = $HingeJoint3D
 
 
 func _ready() -> void:
@@ -43,6 +43,7 @@ func _ready() -> void:
 	probes[2].transform.origin = Vector3(-shift_x, shift_y, shift_z)
 	probes[3].transform.origin = Vector3(-shift_x, shift_y, -shift_z)
 
+	bome_bone_index = bome_skeleton.find_bone("BomeBone")
 	barre_bone_index = barre_skeleton.find_bone("BarreBone")
 	ForceUtils.set_font_size(200)
 
@@ -59,28 +60,16 @@ func _physics_process(_delta: float) -> void:
 
 	apply_torque(Vector3(0, -barre_rotation * 100, 0))
 
-	var instant_rotation: float = (
-		Input.get_axis("move_backward", "move_forward") * boom_rotational_speed
+	bome_rotation += Input.get_axis("turn_bome_right", "turn_bome_left") * bome_rotational_speed
+	bome_rotation = clamp(bome_rotation, -PI / 2, PI / 2)
+	bome_skeleton.set_bone_pose_rotation(
+		bome_bone_index, Quaternion(Vector3(0, 0, 1), bome_rotation)
 	)
+	$Bome.rotation.y = -bome_rotation
 
-	sheet_limit += instant_rotation * 20
-	sheet_limit = clamp(sheet_limit, 10, 80)
-	hinge.set_param(HingeJoint3D.PARAM_LIMIT_LOWER, deg_to_rad(-sheet_limit))
-	hinge.set_param(HingeJoint3D.PARAM_LIMIT_UPPER, deg_to_rad(sheet_limit))
-
-	var boom_length = 4  # Replace with actual length if available
-	var boom_force_position = (
-		boom.global_transform.origin - boom.global_transform.basis.x * boom_length
-	)
-	boom_force_position = -boom.global_transform.basis.x * boom_length
-	var boom_force = wind.wind_vector * 5
-	ForceUtils.apply_and_display_force(
-		boom, boom_force, boom_force_position, Color(1, 1, 0), "boom force", .1
-	)
-
-	var sail_quaternion = boom.global_transform.basis.get_rotation_quaternion()
-	var sail_normal = sail_quaternion * transform.basis.z
-	var sail_direction = sail_quaternion * transform.basis.x
+	var sail_quaternion = Quaternion(Vector3.UP, bome_rotation)
+	var sail_normal = transform.basis.z * sail_quaternion
+	var sail_direction = transform.basis.x * sail_quaternion
 
 	var effective_wind_velocity = wind.wind_vector.dot(sail_normal)
 	var sail_scale = 16
@@ -110,10 +99,10 @@ func _physics_process(_delta: float) -> void:
 
 	var keel_lift = -wind_force.project(transform.basis.z)
 	ForceUtils.apply_and_display_force(
-		boom, wind_force, boom_force_position, Color(1, 1, 0), "wind force", .1
+		self, wind_force, Vector3.ZERO, Color(1, 1, 0), "wind force", .1
 	)
 	ForceUtils.apply_and_display_force(
-		boom, keel_lift, Vector3.ZERO, Color(.9, .5, .1), "keel lift", .1
+		self, keel_lift, Vector3.ZERO, Color(.9, .5, .1), "keel lift", .1
 	)
 	ForceUtils.apply_and_display_force(
 		self,
