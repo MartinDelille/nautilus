@@ -12,20 +12,20 @@ const ForceUtils = preload("res://force_utils.gd")
 @export var air_density := 1.225
 @export var drag_coefficient := 1.0
 @export var lift_coefficient := 0.5
-@export var sail_area := 30
+@export var sail_area := 60
 @export var keel_weight := 100
 
 var submerged := false
 var probes = []
 var barre_bone_index := 0
-var sheet_limit: float = 60.0
+var sheet_limit: float = 10  #60.0
 
 @onready var barre_skeleton: Skeleton3D = $BoatModel/ArmatureBarre/Skeleton3D
 @onready var wind: Node3D = $"../Wind"
 @onready var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 @onready var water = $"../Ocean"
 @onready var boom: RigidBody3D = $Boom
-@onready var hinge: HingeJoint3D = $Boom/HingeJoint3D
+@onready var hinge: HingeJoint3D = $HingeJoint3D
 
 
 func _ready() -> void:
@@ -125,6 +125,10 @@ func _physics_process(_delta: float) -> void:
 
 	var drag = -linear_velocity * linear_velocity.length() * water_drag
 	ForceUtils.apply_and_display_force(self, drag, Vector3.ZERO, Color(0., 1., 0.5), "drag")
+	ForceUtils.display_vector(
+		self, wind_force + keel_lift + drag, Vector3.ZERO, Color(1., .8, .4), "sum", .1
+	)
+	print(wind_force + keel_lift + drag)
 
 	$Yaw.position = lerp($Yaw.position, position, 0.05)
 	$WindArea.wind_force_magnitude = wind.wind_intensity * 20
