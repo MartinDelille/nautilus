@@ -53,6 +53,8 @@ func _physics_process(_delta: float) -> void:
 	DebugDraw2D.set_text("FPS:", Engine.get_frames_per_second(), 0)
 	DebugDraw2D.set_text("Rotation:", "%6.1f" % (rotation.y * 180 / PI))
 
+	mainsheet += Input.get_axis("move_backward", "move_forward") * 0.01
+	mainsheet = clamp(mainsheet, 0.1, 2.0)
 	barre_rotation += Input.get_axis("turn_right", "turn_left") * barre_rotational_speed
 	barre_rotation = clamp(barre_rotation, -PI / 2, PI / 2)
 	barre_skeleton.set_bone_pose_rotation(
@@ -61,8 +63,6 @@ func _physics_process(_delta: float) -> void:
 
 	apply_torque(Vector3(0, -barre_rotation * 100, 0))
 
-	boom_rotation += Input.get_axis("turn_boom_right", "turn_boom_left") * boom_rotational_speed
-	boom_rotation = clamp(boom_rotation, -PI / 2, PI / 2)
 	boom_skeleton.set_bone_pose_rotation(
 		boom_bone_index, Quaternion(Vector3(0, 0, 1), boom_rotation)
 	)
@@ -71,6 +71,9 @@ func _physics_process(_delta: float) -> void:
 	var sail_quaternion = Quaternion(Vector3.UP, boom_rotation)
 	var sail_normal = transform.basis.z * sail_quaternion
 	var sail_direction = transform.basis.x * sail_quaternion
+
+	boom_rotation -= sail_normal.dot(wind.wind_vector) * .01
+	boom_rotation = clamp(boom_rotation, -mainsheet, mainsheet)
 
 	var effective_wind_velocity = wind.wind_vector.dot(sail_normal)
 	var sail_scale = 16
