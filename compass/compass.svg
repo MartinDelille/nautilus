@@ -1,0 +1,96 @@
+<!-- Compass Rose SVG Texture -->
+<svg width="100%" height="100%" viewBox="0 0 360 360" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" width="360" height="180" fill="#E02C22"/>
+  <line x1="0" x2="0" y1="122" y2="128" stroke="#fff" stroke-width="1"/>
+  <g transform="translate(0,145) scale(0.2,1)"><text text-anchor="middle" font-size="3em" font-family="Arial, sans-serif" fill="#fff" dy="0.35em">0</text></g>
+  <line x1="0" x2="0" y1="162" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="10" x2="10" y1="165" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="20" x2="20" y1="165" y2="180" stroke="#fff" stroke-width="1"/>
+  <g transform="translate(30,145) scale(0.2,1)"><text text-anchor="middle" font-size="3em" font-family="Arial, sans-serif" fill="#fff" dy="0.35em">30</text></g>
+  <line x1="30" x2="30" y1="162" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="40" x2="40" y1="165" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="50" x2="50" y1="165" y2="180" stroke="#fff" stroke-width="1"/>
+  <g transform="translate(60,145) scale(0.2,1)"><text text-anchor="middle" font-size="3em" font-family="Arial, sans-serif" fill="#fff" dy="0.35em">60</text></g>
+  <line x1="60" x2="60" y1="162" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="70" x2="70" y1="165" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="80" x2="80" y1="165" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="90" x2="90" y1="122" y2="128" stroke="#fff" stroke-width="1"/>
+  <g transform="translate(90,145) scale(0.2,1)"><text text-anchor="middle" font-size="3em" font-family="Arial, sans-serif" fill="#fff" dy="0.35em">90</text></g>
+  <line x1="90" x2="90" y1="162" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="100" x2="100" y1="165" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="110" x2="110" y1="165" y2="180" stroke="#fff" stroke-width="1"/>
+  <g transform="translate(120,145) scale(0.2,1)"><text text-anchor="middle" font-size="3em" font-family="Arial, sans-serif" fill="#fff" dy="0.35em">120</text></g>
+  <line x1="120" x2="120" y1="162" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="130" x2="130" y1="165" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="140" x2="140" y1="165" y2="180" stroke="#fff" stroke-width="1"/>
+  <g transform="translate(150,145) scale(0.2,1)"><text text-anchor="middle" font-size="3em" font-family="Arial, sans-serif" fill="#fff" dy="0.35em">150</text></g>
+  <line x1="150" x2="150" y1="162" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="160" x2="160" y1="165" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="170" x2="170" y1="165" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="180" x2="180" y1="122" y2="128" stroke="#fff" stroke-width="1"/>
+  <g transform="translate(180,145) scale(0.2,1)"><text text-anchor="middle" font-size="3em" font-family="Arial, sans-serif" fill="#fff" dy="0.35em">180</text></g>
+  <line x1="180" x2="180" y1="162" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="190" x2="190" y1="165" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="200" x2="200" y1="165" y2="180" stroke="#fff" stroke-width="1"/>
+  <g transform="translate(210,145) scale(0.2,1)"><text text-anchor="middle" font-size="3em" font-family="Arial, sans-serif" fill="#fff" dy="0.35em">210</text></g>
+  <line x1="210" x2="210" y1="162" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="220" x2="220" y1="165" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="230" x2="230" y1="165" y2="180" stroke="#fff" stroke-width="1"/>
+  <g transform="translate(240,145) scale(0.2,1)"><text text-anchor="middle" font-size="3em" font-family="Arial, sans-serif" fill="#fff" dy="0.35em">240</text></g>
+  <line x1="240" x2="240" y1="162" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="250" x2="250" y1="165" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="260" x2="260" y1="165" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="270" x2="270" y1="122" y2="128" stroke="#fff" stroke-width="1"/>
+  <g transform="translate(270,145) scale(0.2,1)"><text text-anchor="middle" font-size="3em" font-family="Arial, sans-serif" fill="#fff" dy="0.35em">270</text></g>
+  <line x1="270" x2="270" y1="162" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="280" x2="280" y1="165" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="290" x2="290" y1="165" y2="180" stroke="#fff" stroke-width="1"/>
+  <g transform="translate(300,145) scale(0.2,1)"><text text-anchor="middle" font-size="3em" font-family="Arial, sans-serif" fill="#fff" dy="0.35em">300</text></g>
+  <line x1="300" x2="300" y1="162" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="310" x2="310" y1="165" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="320" x2="320" y1="165" y2="180" stroke="#fff" stroke-width="1"/>
+  <g transform="translate(330,145) scale(0.2,1)"><text text-anchor="middle" font-size="3em" font-family="Arial, sans-serif" fill="#fff" dy="0.35em">330</text></g>
+  <line x1="330" x2="330" y1="162" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="340" x2="340" y1="165" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="350" x2="350" y1="165" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="360" x2="360" y1="122" y2="128" stroke="#fff" stroke-width="1"/>
+  <g transform="translate(360,145) scale(0.2,1)"><text text-anchor="middle" font-size="3em" font-family="Arial, sans-serif" fill="#fff" dy="0.35em">0</text></g>
+  <line x1="360" x2="360" y1="162" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="5" x2="5" y1="170" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="15" x2="15" y1="170" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="25" x2="25" y1="170" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="35" x2="35" y1="170" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="45" x2="45" y1="170" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="55" x2="55" y1="170" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="65" x2="65" y1="170" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="75" x2="75" y1="170" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="85" x2="85" y1="170" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="95" x2="95" y1="170" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="105" x2="105" y1="170" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="115" x2="115" y1="170" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="125" x2="125" y1="170" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="135" x2="135" y1="170" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="145" x2="145" y1="170" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="155" x2="155" y1="170" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="165" x2="165" y1="170" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="175" x2="175" y1="170" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="185" x2="185" y1="170" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="195" x2="195" y1="170" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="205" x2="205" y1="170" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="215" x2="215" y1="170" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="225" x2="225" y1="170" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="235" x2="235" y1="170" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="245" x2="245" y1="170" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="255" x2="255" y1="170" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="265" x2="265" y1="170" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="275" x2="275" y1="170" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="285" x2="285" y1="170" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="295" x2="295" y1="170" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="305" x2="305" y1="170" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="315" x2="315" y1="170" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="325" x2="325" y1="170" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="335" x2="335" y1="170" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="345" x2="345" y1="170" y2="180" stroke="#fff" stroke-width="1"/>
+  <line x1="355" x2="355" y1="170" y2="180" stroke="#fff" stroke-width="1"/>
+  <rect x="0" y="180" width="360" height="180" fill="#000000"/>
+</svg>

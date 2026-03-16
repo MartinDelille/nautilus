@@ -11,7 +11,6 @@ r: check
 	sleep 2
 	osascript -e 'tell application "Ghostty" to activate'
 
-
 l:
 	gdformat *.gd
 	gdlint *.gd
@@ -21,3 +20,6 @@ x: check
 	/bin/rm -rf ./export
 	mkdir -p ./export
 	$$GODOT_PROGRAM --headless --path . --export-release "html" ./export/index.html
+
+generate_compass:
+	echo compass/compass.svg | entr inkscape compass/compass.svg --export-type=png --export-filename=compass/compass.png --export-width=2048 --export-height=2048
