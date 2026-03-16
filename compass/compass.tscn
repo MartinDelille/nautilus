@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://dm5j8xai7672a"]
+
+[ext_resource type="Script" uid="uid://bamlg4sdv5mcp" path="res://compass/compass.gd" id="1_4k05d"]
+[ext_resource type="Texture2D" uid="uid://bwh8e8miwskpj" path="res://compass/compass.png" id="1_bcmtp"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_leea2"]
+albedo_texture = ExtResource("1_bcmtp")
+
+[sub_resource type="SphereMesh" id="SphereMesh_4k05d"]
+material = SubResource("StandardMaterial3D_leea2")
+
+[node name="Compass" type="MeshInstance3D" unique_id=120172736]
+mesh = SubResource("SphereMesh_4k05d")
+script = ExtResource("1_4k05d")

@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://j2ahw1ou4mj7" path="res://floating.tscn" id="4_wisn2"]
 [ext_resource type="PackedScene" uid="uid://df7tqccjhofm7" path="res://boat.blend" id="5_5xxyr"]
 [ext_resource type="Script" uid="uid://c101trx2ups26" path="res://wind.gd" id="6_j8e2u"]
+[ext_resource type="PackedScene" uid="uid://dm5j8xai7672a" path="res://compass/compass.tscn" id="6_sb2pt"]
 [ext_resource type="PackedScene" uid="uid://bq1de6cc73x33" path="res://island/island.blend" id="10_0t07s"]
 [ext_resource type="PackedScene" uid="uid://brsiufh402kei" path="res://buoy.blend" id="10_oysan"]
 [ext_resource type="Script" uid="uid://cp0havsjr4u5d" path="res://buoy.gd" id="10_sb2pt"]
@@ -182,6 +183,9 @@ transform = Transform3D(1, 0, 0, 0, 0.953717, 0.300706, 0, -0.300706, 0.953717, 
 
 [node name="Camera3D" type="Camera3D" parent="FloatingBoat/Yaw/Pitch" unique_id=1370402517]
 transform = Transform3D(1, 8.9407e-08, 5.96046e-08, 0, 1, 5.96046e-08, -2.98023e-08, -5.96046e-08, 1, 0, 0, 39.36)
+
+[node name="Compass" parent="FloatingBoat/Yaw/Pitch/Camera3D" unique_id=120172736 instance=ExtResource("6_sb2pt")]
+transform = Transform3D(1, -9.6112505e-09, -9.992013e-16, 1.1175873e-08, 0.86, 2.9802333e-08, 6.6613413e-16, -2.5630007e-08, 1, 0, -1.246, -2.319)
 
 [node name="WindArea" type="Area3D" parent="FloatingBoat" unique_id=633284820]
 wind_force_magnitude = 6.0

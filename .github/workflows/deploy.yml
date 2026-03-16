@@ -54,12 +54,20 @@ jobs:
           unzip debug-draw-3d_1.6.0.zip -d .
           mv debug_draw_3d-1.6.0/addons/debug_draw_3d addons
 
+      - name: Install imagemagick
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y inkscape
+
+      - name: Convert SVGs to PNGs
+        run: inkscape compass/compass.svg --export-type=png --export-filename=compass/compass.png --export-width=2048 --export-height=2048
+
       - name: Copy Godot editor settings
         run: |
           mkdir ~/.config/godot
           cp editor_settings-4.tres ~/.config/godot
 
-      - name: Set up Godot
+      - name: Godot export
         uses: firebelley/godot-export@v7.0.0
         with:
           godot_executable_download_url: https://github.com/godotengine/godot/releases/download/${{ env.GODOT_VERSION }}-stable/Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64.zip
