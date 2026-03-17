@@ -77,10 +77,10 @@ jobs:
           cache: true
       - name: List files
         run: tree
-      - name: Fail if any commit message contains 'wip' since main
+      - name: Fail if any commit message contains '[no_ci]' since main
         run: |
-          if git log --pretty=%B origin/main..HEAD | grep -iq 'wip'; then
-            echo "Deployment blocked: commit message contains 'wip'."
+          if git log --pretty=%B origin/main..HEAD | grep -iq '\[no_ci\]'; then
+            echo "Deployment blocked: commit message contains '[no_ci]'."
             exit 1
           fi
       - name: Upload HTML artifact
