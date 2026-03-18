@@ -1,7 +1,7 @@
 extends Node3D
 
 @onready var yaw: Node3D = $"."
-@onready var pitch: Node3D = %Pitch
+@onready var pitch: Node3D = $Pitch
 @onready var camera_3d: Camera3D = $Pitch/Camera3D
 
 

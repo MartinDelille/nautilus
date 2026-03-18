@@ -1,4 +1,5 @@
 default: e
+scene = physic_playground
 scene = map
 
 check:
