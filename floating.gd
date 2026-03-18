@@ -3,11 +3,12 @@ extends RigidBody3D
 const ForceUtils = preload("res://force_utils.gd")
 
 @export var floating_force := 10.35
-@export var water_drag := 0.3
+@export var water_drag := 0.99
 @export var water_angular_drag := .7
 @export var longitudinal_speed := 20.
 @export var barre_rotation := 0.
 @export var barre_rotational_speed := 0.01
+@export var barre_torque := 400
 @export var boom_rotation := 0.
 @export var boom_rotational_speed := 0.03
 @export var air_density := 1.225
@@ -61,7 +62,7 @@ func _physics_process(_delta: float) -> void:
 		barre_bone_index, Quaternion(Vector3(0, 1, 0), barre_rotation)
 	)
 
-	apply_torque(Vector3(0, -barre_rotation * 100, 0))
+	apply_torque(Vector3(0, -barre_rotation * barre_torque, 0))
 
 	boom_skeleton.set_bone_pose_rotation(
 		boom_bone_index, Quaternion(Vector3(0, 0, 1), boom_rotation)
