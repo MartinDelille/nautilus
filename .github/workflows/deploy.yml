@@ -16,6 +16,7 @@ permissions:
 env:
   BLENDER_VERSION: 5.0.1
   GODOT_VERSION: 4.6.1
+  GODOTDEBUGDRAW3D_VERSION: 1.7.2
 
 jobs:
   build:
@@ -50,9 +51,9 @@ jobs:
       - name: Install godot_debug_draw_3d addon dependencies
         run: |
           mkdir -p addons
-          wget https://github.com/DmitriySalnikov/godot_debug_draw_3d/releases/download/1.6.0/debug-draw-3d_1.6.0.zip
-          unzip debug-draw-3d_1.6.0.zip -d .
-          mv debug_draw_3d-1.6.0/addons/debug_draw_3d addons
+          wget https://github.com/DmitriySalnikov/godot_debug_draw_3d/releases/download/${{ env.GODOTDEBUGDRAW3D_VERSION }}/debug-draw-3d_${{ env.GODOTDEBUGDRAW3D_VERSION }}.zip
+          unzip debug-draw-3d_${{ env.GODOTDEBUGDRAW3D_VERSION }}.zip -d .
+          mv debug_draw_3d-${{ env.GODOTDEBUGDRAW3D_VERSION }}/addons/debug_draw_3d addons
 
       - name: Install imagemagick
         run: |
