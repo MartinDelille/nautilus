@@ -5,3 +5,10 @@
 .envrc
 addons/
 export/
+compass/compass.png
+compass/compass.png.import
+pyproject.toml
+uv.lock
+README.md
+.python-version
+compass/index.html
