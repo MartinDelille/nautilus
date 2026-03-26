@@ -56,7 +56,7 @@ func _ready() -> void:
 
 func _physics_process(_delta: float) -> void:
 	DebugDraw2D.set_text("FPS:", Engine.get_frames_per_second(), 0)
-	DebugDraw2D.set_text("Rotation:", "%6.1f" % (rotation.y * 180 / PI))
+	DebugDraw2D.set_text("Knots:", "%6.1f" % (linear_velocity.length() * 1.94384))
 
 	mainsheet += Input.get_axis("move_backward", "move_forward") * 0.01
 	mainsheet = clamp(mainsheet, 0.1, 2.0)
