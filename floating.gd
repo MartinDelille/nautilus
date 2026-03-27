@@ -2,29 +2,29 @@ extends RigidBody3D
 
 const ForceUtils = preload("res://force_utils.gd")
 
-@export var floating_force := 1
-@export var water_drag := 0.99
+@export var floating_force := 50
+@export var water_drag := 2.
 @export var water_angular_drag := .7
 @export var longitudinal_speed := 20.
-@export var barre_rotation := 0.
-@export var barre_rotational_speed := 0.01
-@export var barre_torque := 400
+@export var rudder_rotation := 0.
+@export var rudder_rotational_speed := 1.
+@export var rudder_torque := 1000
 @export var boom_rotation := 0.
 @export var boom_rotational_speed := 0.03
 @export var air_density := 1.225
 @export var drag_coefficient := 1.0
 @export var lift_coefficient := 0.5
-@export var sail_area := 20
-@export var keel_weight := 10
+@export var sail_area := 30
+@export var keel_weight := 200
 
 var submerged := false
 var probes = []
 var boom_bone_index := 0
-var barre_bone_index := 0
-var mainsheet = 1.0
+var rudder_bone_index := 0
+var mainsheet = 0.1
 
 @onready var boom_skeleton: Skeleton3D = $BoatModel/ArmatureBoom/Skeleton3D
-@onready var barre_skeleton: Skeleton3D = $BoatModel/ArmatureBarre/Skeleton3D
+@onready var rudder_skeleton: Skeleton3D = $BoatModel/ArmatureBarre/Skeleton3D
 @onready var wind: Node3D = $"../Wind"
 @onready var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 @onready var water = $"../Ocean"
@@ -47,26 +47,29 @@ func _ready() -> void:
 	probes[3].transform.origin = Vector3(-shift_x, shift_y, -shift_z)
 
 	boom_bone_index = boom_skeleton.find_bone("BoomBone")
-	barre_bone_index = barre_skeleton.find_bone("BarreBone")
+	rudder_bone_index = rudder_skeleton.find_bone("BarreBone")
 	ForceUtils.set_font_size(40, 200)
 
 	for index in [2, 3, 11, 18, 21, 28, 31, 38, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49]:
 		sail.set_point_pinned(index, true, NodePath(".."))
 
 
-func _physics_process(_delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	DebugDraw2D.set_text("FPS:", Engine.get_frames_per_second(), 0)
-	DebugDraw2D.set_text("Knots:", "%6.1f" % (linear_velocity.length() * 1.94384))
+	DebugDraw2D.set_text(
+		"Knots:", "%6.1f" % (Vector2(linear_velocity.x, linear_velocity.z).length() * 1.94384)
+	)
+	DebugDraw2D.set_text("Rotation speed:", "%6.1f" % rad_to_deg(-angular_velocity.y))
 
-	mainsheet += Input.get_axis("move_backward", "move_forward") * 0.01
+	mainsheet += Input.get_axis("move_backward", "move_forward") * delta
 	mainsheet = clamp(mainsheet, 0.1, 2.0)
-	barre_rotation += Input.get_axis("turn_right", "turn_left") * barre_rotational_speed
-	barre_rotation = clamp(barre_rotation, -PI / 2, PI / 2)
-	barre_skeleton.set_bone_pose_rotation(
-		barre_bone_index, Quaternion(Vector3(0, 1, 0), barre_rotation)
+	rudder_rotation += Input.get_axis("turn_right", "turn_left") * rudder_rotational_speed * delta
+	rudder_rotation = clamp(rudder_rotation, -PI / 2, PI / 2)
+	rudder_skeleton.set_bone_pose_rotation(
+		rudder_bone_index, Quaternion(Vector3(0, 1, 0), rudder_rotation)
 	)
 
-	apply_torque(Vector3(0, -barre_rotation * barre_torque, 0))
+	apply_torque(Vector3(0, -rudder_rotation * rudder_torque * linear_velocity.length(), 0))
 
 	boom_skeleton.set_bone_pose_rotation(
 		boom_bone_index, Quaternion(Vector3(0, 0, 1), boom_rotation)
@@ -83,10 +86,15 @@ func _physics_process(_delta: float) -> void:
 	var effective_wind_velocity = wind.wind_vector.dot(sail_normal)
 	var sail_scale = 16
 	ForceUtils.display_vector(
-		self, sail_scale * sail_normal, transform.basis.y * 4, Color(0, 1, 0), "sail normal"
+		self, sail_scale * sail_normal, transform.basis.y * 4, Color(0, 1, 0), "sail normal", 0.
 	)
 	ForceUtils.display_vector(
-		self, sail_scale * sail_direction, transform.basis.y * 4, Color(1, 0, 0), "sail direction"
+		self,
+		sail_scale * sail_direction,
+		transform.basis.y * 4,
+		Color(1, 0, 0),
+		"sail direction",
+		0.
 	)
 	ForceUtils.display_vector(
 		self, 8 * wind.wind_vector, transform.basis.y * 8, Color(0, 1, 1), "wind vector"
@@ -106,12 +114,17 @@ func _physics_process(_delta: float) -> void:
 	else:
 		wind_force += sail_normal * wind_effect
 
-	var keel_lift = -wind_force.project(transform.basis.z)
+	var keel_lift = -linear_velocity.project(transform.basis.z) * 4000
+	var factor = 0.05
+
 	ForceUtils.apply_and_display_force(
-		self, wind_force, Vector3.ZERO, Color(1, 1, 0), "wind force", .1
+		self, wind_force, Vector3.ZERO, Color(1, 1, 0), "wind force", factor
 	)
 	ForceUtils.apply_and_display_force(
-		self, keel_lift, Vector3.ZERO, Color(.9, .5, .1), "keel lift", .1
+		self, keel_lift, Vector3.ZERO, Color(.9, .5, .1), "keel lift", factor
+	)
+	ForceUtils.display_vector(
+		self, wind_force + keel_lift, Vector3.ZERO, Color(0., 1., 0.), "sum", factor
 	)
 	ForceUtils.apply_and_display_force(
 		self,
@@ -119,7 +132,7 @@ func _physics_process(_delta: float) -> void:
 		-10 * transform.basis.y,
 		Color(.5, .1, .2),
 		"keel weight",
-		.1
+		factor
 	)
 
 	submerged = false
@@ -145,4 +158,4 @@ func _physics_process(_delta: float) -> void:
 
 func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 	if submerged:
-		state.angular_velocity *= 1 - water_angular_drag
+		state.angular_velocity *= water_angular_drag

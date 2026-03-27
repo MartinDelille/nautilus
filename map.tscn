@@ -77,7 +77,9 @@ environment = SubResource("Environment_vrchl")
 transform = Transform3D(1, 0, 0, 0, 0.989846, 0.142145, 0, -0.142145, 0.989846, 0, 0, 0)
 
 [node name="FloatingBoat" parent="." unique_id=1188005839 instance=ExtResource("4_wisn2")]
-mass = 4.0
+mass = 400.0
+linear_velocity = Vector3(10, 0, 0)
+linear_damp_mode = 1
 keel_weight = 50
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="FloatingBoat" unique_id=1789612543]
@@ -90,6 +92,7 @@ shape = SubResource("BoxShape3D_xm1ix")
 [node name="Sail" type="SoftBody3D" parent="FloatingBoat/Boom" unique_id=289924001]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.6447084, 4.816626, 0)
 mesh = SubResource("PrismMesh_0t07s")
+total_mass = 3.0
 
 [node name="Yaw" type="Node3D" parent="FloatingBoat" unique_id=1940015646]
 transform = Transform3D(-0.979575, 0, -0.201078, 0, 1, 0, 0.201078, 0, -0.979575, 0, 0, 0)
@@ -117,9 +120,10 @@ shape = SubResource("BoxShape3D_sb2pt")
 [node name="Wind" type="Node3D" parent="." unique_id=340035880]
 script = ExtResource("6_j8e2u")
 wind_angle_degree = -90.0
+wind_intensity = 5.0
 wind_distance = 30
 wind_angle_radiant = -1.5707963267948966
-wind_vector = Vector3(-1.7881393e-07, 0, 2.9999998)
+wind_vector = Vector3(-2.9802322e-07, 0, 4.9999995)
 
 [node name="WindSource" type="Marker3D" parent="Wind" unique_id=890995890]
 transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, -1.83697e-15, 2, -30)
