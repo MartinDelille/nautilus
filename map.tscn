@@ -4,7 +4,9 @@
 [ext_resource type="Shader" uid="uid://ctcg62yvwqe31" path="res://sky.gdshader" id="2_gqbix"]
 [ext_resource type="Script" uid="uid://dyo57qdqevo5i" path="res://camera_pivot.gd" id="3_04a7x"]
 [ext_resource type="PackedScene" uid="uid://j2ahw1ou4mj7" path="res://floating.tscn" id="4_wisn2"]
+[ext_resource type="Texture2D" uid="uid://boc32io8qcdx" path="res://sail.png" id="5_0t07s"]
 [ext_resource type="PackedScene" uid="uid://df7tqccjhofm7" path="res://boat.blend" id="5_5xxyr"]
+[ext_resource type="Shader" uid="uid://bveaxnhf2g1lr" path="res://sail.gdshader" id="5_6qsgm"]
 [ext_resource type="Script" uid="uid://c101trx2ups26" path="res://wind.gd" id="6_j8e2u"]
 [ext_resource type="PackedScene" path="res://compass/compass.tscn" id="6_sb2pt"]
 [ext_resource type="PackedScene" uid="uid://bq1de6cc73x33" path="res://island/island.blend" id="10_0t07s"]
@@ -55,7 +57,16 @@ ambient_light_color = Color(0.858824, 0.901961, 0.709804, 1)
 [sub_resource type="BoxShape3D" id="BoxShape3D_xm1ix"]
 size = Vector3(7.03, 1, 4)
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ooc2g"]
+render_priority = 0
+shader = ExtResource("5_6qsgm")
+shader_parameter/albedo = Color(1, 1, 1, 1)
+shader_parameter/texture_albedo = ExtResource("5_0t07s")
+shader_parameter/offset = Vector2(-0.66, -0.01)
+shader_parameter/scale = Vector2(-2.96, -2.03)
+
 [sub_resource type="PrismMesh" id="PrismMesh_0t07s"]
+material = SubResource("ShaderMaterial_ooc2g")
 left_to_right = 1.0
 size = Vector3(5.21, 5.29, 0.01)
 subdivide_width = 3
