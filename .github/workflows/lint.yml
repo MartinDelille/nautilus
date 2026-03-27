@@ -15,11 +15,14 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: Scony/godot-gdscript-toolkit@master
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          enable-cache: true
       - name: Format
-        run: gdformat --check .
+        run: uv run gdformat --check .
       - name: Lint
-        run: gdlint .
+        run: uv run gdlint .
       - name: Fail if any commit message contains 'wip/fixup/no_ci' since main
         run: |
           if git log --pretty=%B origin/main..HEAD | grep -Eiq 'wip|fixup|no_ci'; then
