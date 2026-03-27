@@ -2,7 +2,7 @@ extends RigidBody3D
 
 const ForceUtils = preload("res://force_utils.gd")
 
-@export var floating_force := 10.35
+@export var floating_force := 1
 @export var water_drag := 0.99
 @export var water_angular_drag := .7
 @export var longitudinal_speed := 20.
@@ -28,6 +28,7 @@ var mainsheet = 1.0
 @onready var wind: Node3D = $"../Wind"
 @onready var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 @onready var water = $"../Ocean"
+@onready var sail: SoftBody3D = $Boom/Sail
 
 
 func _ready() -> void:
@@ -48,6 +49,9 @@ func _ready() -> void:
 	boom_bone_index = boom_skeleton.find_bone("BoomBone")
 	barre_bone_index = barre_skeleton.find_bone("BarreBone")
 	ForceUtils.set_font_size(40, 200)
+
+	for index in [2, 3, 11, 18, 21, 28, 31, 38, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49]:
+		sail.set_point_pinned(index, true, NodePath(".."))
 
 
 func _physics_process(_delta: float) -> void:
