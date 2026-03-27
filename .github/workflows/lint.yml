@@ -11,7 +11,21 @@ jobs:
     name: "Static checks"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: Scony/godot-gdscript-toolkit@master
-      - run: gdformat --check .
-      - run: gdlint .
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          enable-cache: true
+      - name: Format
+        run: uv run gdformat --check .
+      - name: Lint
+        run: uv run gdlint .
+      - name: Fail if any commit message contains 'wip/fixup/no_ci' since main
+        run: |
+          if git log --pretty=%B origin/main..HEAD | grep -Eiq 'wip|fixup|no_ci'; then
+            echo "Linting blocked: commit message contains '[wip|fixup|no_ci]'."
+            exit 1
+          fi
