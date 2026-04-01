@@ -10,13 +10,17 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		var mouse_movement = event.relative * PI / 300
 		if event.button_mask == MOUSE_BUTTON_LEFT:
+			print("mouse motion: ", mouse_movement)
 			yaw.rotate_y(-mouse_movement.x)
 			pitch.rotate_x(-mouse_movement.y)
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
+			print("mouse wheel: ", -event.factor)
 			wheel_movement.z = -event.factor
 		if event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+			print("mouse wheel: ", event.factor)
 			wheel_movement.z = event.factor
 	if event is InputEventPanGesture:
 		wheel_movement.z = event.delta.angle() * .1
+		print("pan gesture: ", wheel_movement.z)
 	camera_3d.translate(wheel_movement)
